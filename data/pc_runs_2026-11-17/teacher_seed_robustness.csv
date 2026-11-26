@@ -1,0 +1,27 @@
+test,contrast,diff,lo,hi,p_one_sided,holm,non_inferior,kind,quantity,value
+F1,cnx_kd_tga_t1 minus teacher LoRA seed 1,-0.011613867950115986,-0.02407619822632879,0.000851853580071046,0.0904454777261137,0.0904454777261137,False,pre-specified,,
+F2,cnx_kd_tga_t2 minus teacher LoRA seed 2,-0.005147608559139649,-0.018089906579307306,0.007822836600360301,0.013349332533373332,0.026698665066746664,False,pre-specified,,
+key secondary,mean over teacher seeds 0-2 of (KD + TGA minus its teacher); k = 0 already seen,-0.008653289787969457,-0.01977589011534956,0.002302792190211274,0.023298835058247088,,True,pre-specified,,
+,,,0.7425143049772698,1.0398092196747961,,,,descriptive,teacher seed 0: share of the teacher's advantage recovered by KD + TGA,0.8824860229039114
+,,,0.19708969826751266,0.5378701476340162,,,,descriptive,teacher seed 0: share recovered by KD,0.37167201637864894
+,,,0.690638670287857,0.98518767865577,,,,descriptive,teacher seed 0: share recovered by KD + TGR,0.8282236710625437
+,,,-0.026166443811088215,-0.0010507418362053981,,,,descriptive,teacher seed 0: KD + TGR minus teacher,-0.013445772117854471
+,,,0.025297696224643066,0.0563134341172911,,,,descriptive,teacher seed 0: KD + TGA minus KD,0.03998390679805275
+,,,0.7841245574408122,0.8220703942386616,,,,descriptive,teacher seed 0: KD + TGA F1,0.8047775294577911
+,,,0.7944898199076413,0.8299557202578745,,,,descriptive,teacher seed 0: teacher F1,0.8139759223124439
+,,,0.7339251620136674,1.0114292959793205,,,,descriptive,teacher seed 1: share of the teacher's advantage recovered by KD + TGA,0.8632836898197583
+,,,0.34711200249394286,0.6211319997181778,,,,descriptive,teacher seed 1: share recovered by KD,0.47867457175270123
+,,,0.6853066859834065,0.9404736318225092,,,,descriptive,teacher seed 1: share recovered by KD + TGR,0.801210725679359
+,,,-0.028902223475815992,-0.004606266853443142,,,,descriptive,teacher seed 1: KD + TGR minus teacher,-0.016886883348560144
+,,,0.019889789385090624,0.0465799982912263,,,,descriptive,teacher seed 1: KD + TGA minus KD,0.03267203089194337
+,,,0.7883141886497812,0.8259554968423898,,,,descriptive,teacher seed 1: KD + TGA F1,0.8090358353556705
+,,,0.8006816309041702,0.8361929675295552,,,,descriptive,teacher seed 1: teacher F1,0.8206497033057865
+,,,0.7424171411786477,1.1356217229986052,,,,descriptive,teacher seed 2: share of the teacher's advantage recovered by KD + TGA,0.9212529182862603
+,,,0.4259265130511452,0.8672135585172349,,,,descriptive,teacher seed 2: share recovered by KD,0.6344275750073323
+,,,0.6901977784520378,1.0947406940253683,,,,descriptive,teacher seed 2: share recovered by KD + TGR,0.8882947278545711
+,,,-0.021315427052356138,0.005508290969923204,,,,descriptive,teacher seed 2: KD + TGR minus teacher,-0.00730204856463279
+,,,0.004785033813000122,0.03448680561401803,,,,descriptive,teacher seed 2: KD + TGA minus KD,0.018749451534064487
+,,,0.7742786839125884,0.8135432142807765,,,,descriptive,teacher seed 2: KD + TGA F1,0.7959223106646979
+,,,0.7796970201941994,0.8190302688710083,,,,descriptive,teacher seed 2: teacher F1,0.8010699192238375
+,,,0.005896052089464296,0.02117797162213799,,,,descriptive,range of KD + TGA F1 over teacher seeds (max - min),0.0131135246909726
+,,,0.009784560491509234,0.029912677837767913,,,,descriptive,range of teacher F1 over teacher seeds (max - min),0.019579784081948937

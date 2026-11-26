@@ -1,0 +1,92 @@
+\section{Study design}
+\label{sec:design}
+
+\subsection{Data and evaluation protocol}
+
+We use the human breast carcinoma subset of MIDOG++ \citep{aubreville2023comprehensive}: 150 cases, 50 from each of
+three scanners (Hamamatsu XR, Hamamatsu S360, Aperio CS2), with 1{,}721 annotated mitotic figures and 2{,}714 hard
+negatives (imposters), i.e.\ 4{,}435 cells. Each model classifies a patch centred on an annotation (mitotic figure vs.\
+imposter); candidate detection is outside our scope. We hold out one scanner at a time and train on the official training images of the other two, except eight images per training scanner that
+form a fixed validation set. Checkpoint and decision threshold (\emph{cutoff}) are always selected on this source
+validation set by F1, so the held-out scanner never informs a training decision.
+
+All 50 images of the held-out scanner are used for evaluation through cross-fitting. They are sorted by
+identifier and split into alternating halves $A$ and $B$. Every method that uses unlabelled new-scanner data is fitted
+on one half and applied to the other, then the halves are swapped, so each cell is scored by a model that never saw its
+image in any form. The outcome is F1 on all cells of the held-out scanner, computed per run, averaged over the student
+seeds and then over the three held-out scanners. New-scanner labels are used only for scoring and for the
+labelled-cutoff upper bound.
+
+\subsection{Teachers and students}
+
+\emph{Teachers.} Four pathology foundation models, H-optimus-0 \citep{hoptimus0}, Virchow2 \citep{zimmermann2024virchow2},
+UNI \citep{chen2024uni} and UNI2-h \citep{uni2h}, are adapted with LoRA \citep{hu2022lora} (rank 16, $\alpha=16$,
+dropout 0.1 on every attention and MLP projection; frozen encoder; linear head on the class token concatenated with the
+mean patch token), following a recent mitotic-figure benchmark \citep{ammeling2026benchmarking}. Each teacher is
+trained for 5 epochs on 224-pixel centre crops, once per held-out scanner and LoRA seed (three seeds).
+
+\emph{Students.} To test whether the decomposition depends on BatchNorm, we use two ImageNet-initialised students:
+ResNet-18 \citep{he2016deep} (11\,M parameters, BatchNorm) and ConvNeXt-T \citep{liu2022convnet} (28\,M parameters,
+LayerNorm, no statistics to re-estimate), trained on 128-pixel crops for 60 epochs with 10 seeds per configuration. The
+\emph{no-teacher student} is trained with expert labels only. The \emph{distilled (KD) student}
+\citep{hinton2015distilling}, in contrast, never sees an expert label: it matches the teacher's temperature-softened
+probability ($T=2$) and, through a linear projection, the teacher's feature vector (cosine loss, weight 1) on 16 cached
+views of each source cell (8 dihedral transforms, each with and without H\&E stain jitter). Students are distilled from
+the LoRA seed-0 teacher unless stated otherwise.
+
+\subsection{Three layers and their repairs}
+\label{sec:layers}
+
+We describe what the student loses on a new scanner in three layers and repair them in order of cost
+(\figureref{fig:schematic}; \tableref{tab:ladder} in Appendix~\ref{app:impl}).
+
+\emph{Operating point.} Even when a student keeps its ranking (AUROC) on a new scanner, a cutoff chosen on source data
+can be wrong there \citep{roschewitz2023automatic,thiringer2026scanner}. Our repair, \emph{teacher-referenced
+recalibration} (TGR), keeps the student's weights and fits one logit offset so that the student agrees with the teacher
+on the unlabelled cells $U$ of the fit half:
+\begin{equation}
+\hat b = \arg\min_b \; -\frac{1}{|U|}\sum_{x\in U}\Big[q(x)\log\sigma\big(z(x)+b\big) + \big(1-q(x)\big)\log\big(1-\sigma(z(x)+b)\big)\Big],
+\label{eq:tgr}
+\end{equation}
+where $z(x)$ is the student logit and $q(x)$ the teacher probability; a cell of the other half is called positive if
+$z(x)+\hat b \ge \operatorname{logit}(\tau_T)$, with $\tau_T$ the teacher's own source cutoff. Because the ranking is
+kept, this shift carries the teacher's view of the target prevalence over to the student. TGR needs no retraining, only the
+teacher's forward pass on a few unlabelled images (about 150 cells for five).
+
+\emph{Normalisation statistics.} For ResNet-18, AdaBN \citep{li2018adaptive,schneider2020improving} re-estimates the
+BatchNorm running statistics on the fit half without changing any learned weight. TENT \citep{wang2021tent} additionally
+tunes the BatchNorm affine parameters by entropy minimisation (learning rate $10^{-3}$, one epoch; Appendix~\ref{app:tent}).
+
+\emph{Representation.} Teacher-guided adaptation (TGA) retrains the KD student with the unlabelled cells of the fit
+half added to the distillation set, using the teacher's answers and features on the same views. As a control for the
+contribution of the teacher, \emph{no-teacher adaptation} trains on the same
+unlabelled cells with the soft answers of an ensemble of the ten no-teacher ResNet-18 students after AdaBN on the same
+half, and with expert labels on the source cells; no foundation model is involved, and the same pseudo-labeller serves
+both students.
+
+\subsection{Attribution}
+
+With $F_\text{ctrl}$ the new-scanner F1 of the no-teacher student and $F_\text{teacher}$ that of the teacher at its
+source cutoff, we express every arm by the \emph{share of the teacher's advantage recovered},
+$(F_\text{arm}-F_\text{ctrl})/(F_\text{teacher}-F_\text{ctrl})$ (0\% = no-teacher student, 100\% = teacher), the
+``performance gap recovered'' of \citet{burns2023weak}. Because AdaBN also moves the operating point, the credit of the
+two post-hoc layers depends on their order. We therefore report Shapley values over \{threshold, statistics\}
+\citep{zhang2023why}, i.e.\ each layer's gain averaged over the two orders. Retraining is credited with the gain of TGA beyond the two post-hoc layers, and the rest is the remaining gap.
+
+\subsection{Statistical analysis}
+\label{sec:stats}
+
+Uncertainty comes from a paired bootstrap \citep{efron1993introduction} with $B=20{,}000$ replicates that resamples the
+50 images of each held-out scanner (multinomial weights on images, shared by all arms) and the 10 student seeds, since
+both are sources of variation \citep{varoquaux2022machine}; intervals are 95\% percentile intervals of the
+fold-averaged statistic. Two-sided bootstrap $p$-values are adjusted with Holm's procedure \citep{holm1979simple} within
+each family of contrasts.
+
+Each family of confirmatory contrasts, together with its expected direction, was written down and its file hash
+recorded before the corresponding models were trained or the corresponding numbers computed (Appendix~\ref{app:prereg});
+results that contradict an expectation are reported as such, and analyses added afterwards are labelled descriptive. To
+ask whether the student is as good as its teacher, we test non-inferiority with a margin of $\delta=0.02$ F1, the range
+of the H-optimus-0 teacher's own new-scanner F1 over three LoRA seeds (0.801 to 0.821): the student is called
+non-inferior if the lower limit of the 95\% interval of (student $-$ teacher) exceeds $-0.02$ (one-sided $\alpha=0.025$,
+Holm within the family). A failed test is reported as ``non-inferiority not established'', not as equivalence or
+difference.

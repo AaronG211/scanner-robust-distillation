@@ -1,0 +1,23 @@
+group,what,n,gpu_minutes,in_paper,note
+teacher,"H-optimus-0 LoRA, seed 0",3,74.2,True,fine-tuned by a teammate
+teacher,"uni-lora, seed 0",3,7.1,True,
+teacher,"uni2h-lora, seed 0",3,16.2,True,
+teacher,"virchow2-lora, seed 0",3,16.8,True,
+teacher,"h-optimus-0-lora, seeds 1-2",6,77.4,True,
+teacher,"uni-lora, seeds 1-2",6,14.2,True,
+teacher,"uni2h-lora, seeds 1-2",6,32.4,True,
+teacher,"virchow2-lora, seeds 1-2",6,33.8,True,
+student ResNet-18,no-teacher student,30,15.4,True,
+student ResNet-18,"KD, H-optimus-0",30,15.3,True,
+student ResNet-18,"KD, Virchow2 / UNI / UNI2-h",90,50.8,True,
+student ResNet-18,"KD + TGA, H-optimus-0 (halves A/B)",60,41.5,True,
+student ResNet-18,"KD + TGA, Virchow2 / UNI / UNI2-h (halves A/B)",180,138.5,True,
+student ResNet-18,no-teacher adaptation (halves A/B),60,43.7,True,
+student ConvNeXt-T,no-teacher student,30,39.8,True,
+student ConvNeXt-T,"KD, H-optimus-0 / Virchow2",60,78.6,True,
+student ConvNeXt-T,"KD + TGA, H-optimus-0 / Virchow2 (halves A/B)",120,213.2,True,
+student ConvNeXt-T,no-teacher adaptation (halves A/B; Protocol C),60,103.8,True,
+student ConvNeXt-T,"KD, H-optimus-0 LoRA seeds 1-2 (Protocol F)",60,77.0,True,
+student ConvNeXt-T,"KD + TGA, H-optimus-0 LoRA seeds 1-2 (halves A/B; Protocol F)",120,209.8,True,
+student ResNet-18,KD + target adaptation without cross-fitting (superseded),30,24.1,False,exploratory
+student ResNet-18,"TGA variants (ResNet pseudo-labeller, soft-only)",120,88.7,False,exploratory

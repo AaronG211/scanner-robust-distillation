@@ -1,0 +1,27 @@
+\begin{table}[htbp]
+\floatconts{tab:recal-diff}
+{\caption{TGR minus each recalibration method (F1, 95\% paired-bootstrap interval; descriptive). A separate bootstrap run from \tableref{tab:app-tests}, so shared contrasts can differ in the third decimal of an interval limit.}}
+{%
+\tiny
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Method & \multicolumn{3}{c}{ResNet-18 KD: natural, 0.2, 0.6} & \multicolumn{3}{c}{ConvNeXt-T KD: natural, 0.2, 0.6} \\
+\midrule
+Source cutoff & \makecell{+0.037\\[-1pt]{\tiny[+0.022, +0.053]}} & \makecell{+0.038\\[-1pt]{\tiny[+0.020, +0.058]}} & \makecell{+0.048\\[-1pt]{\tiny[+0.034, +0.064]}} & \makecell{+0.036\\[-1pt]{\tiny[+0.022, +0.052]}} & \makecell{+0.014\\[-1pt]{\tiny[-0.002, +0.031]}} & \makecell{+0.051\\[-1pt]{\tiny[+0.038, +0.067]}} \\
+UPA & \makecell{+0.002\\[-1pt]{\tiny[-0.008, +0.012]}} & \makecell{+0.081\\[-1pt]{\tiny[+0.065, +0.097]}} & \makecell{+0.061\\[-1pt]{\tiny[+0.047, +0.077]}} & \makecell{+0.020\\[-1pt]{\tiny[+0.010, +0.032]}} & \makecell{+0.078\\[-1pt]{\tiny[+0.064, +0.094]}} & \makecell{+0.084\\[-1pt]{\tiny[+0.067, +0.104]}} \\
+Source positive rate & \makecell{+0.002\\[-1pt]{\tiny[-0.008, +0.012]}} & \makecell{+0.080\\[-1pt]{\tiny[+0.064, +0.096]}} & \makecell{+0.061\\[-1pt]{\tiny[+0.048, +0.077]}} & \makecell{+0.019\\[-1pt]{\tiny[+0.009, +0.031]}} & \makecell{+0.078\\[-1pt]{\tiny[+0.064, +0.094]}} & \makecell{+0.083\\[-1pt]{\tiny[+0.067, +0.103]}} \\
+One bias, source mean & \makecell{+0.001\\[-1pt]{\tiny[-0.007, +0.011]}} & \makecell{+0.046\\[-1pt]{\tiny[+0.031, +0.061]}} & \makecell{+0.067\\[-1pt]{\tiny[+0.050, +0.087]}} & \makecell{+0.022\\[-1pt]{\tiny[+0.010, +0.037]}} & \makecell{+0.025\\[-1pt]{\tiny[+0.016, +0.034]}} & \makecell{+0.126\\[-1pt]{\tiny[+0.096, +0.158]}} \\
+EM prior & \makecell{+0.210\\[-1pt]{\tiny[+0.175, +0.240]}} & \makecell{+0.235\\[-1pt]{\tiny[+0.213, +0.257]}} & \makecell{+0.127\\[-1pt]{\tiny[+0.097, +0.158]}} & \makecell{+0.129\\[-1pt]{\tiny[+0.098, +0.161]}} & \makecell{+0.186\\[-1pt]{\tiny[+0.152, +0.216]}} & \makecell{+0.073\\[-1pt]{\tiny[+0.054, +0.095]}} \\
+EM + BCTS & \makecell{+0.241\\[-1pt]{\tiny[+0.212, +0.264]}} & \makecell{+0.240\\[-1pt]{\tiny[+0.220, +0.261]}} & \makecell{+0.150\\[-1pt]{\tiny[+0.117, +0.183]}} & \makecell{+0.122\\[-1pt]{\tiny[+0.091, +0.155]}} & \makecell{+0.178\\[-1pt]{\tiny[+0.141, +0.212]}} & \makecell{+0.073\\[-1pt]{\tiny[+0.053, +0.095]}} \\
+BBSE & \makecell{+0.216\\[-1pt]{\tiny[+0.180, +0.245]}} & \makecell{+0.236\\[-1pt]{\tiny[+0.213, +0.260]}} & \makecell{+0.112\\[-1pt]{\tiny[+0.084, +0.140]}} & \makecell{+0.127\\[-1pt]{\tiny[+0.096, +0.158]}} & \makecell{+0.215\\[-1pt]{\tiny[+0.177, +0.248]}} & \makecell{+0.070\\[-1pt]{\tiny[+0.050, +0.092]}} \\
+Bias + temp. (teacher) & \makecell{+0.002\\[-1pt]{\tiny[+0.000, +0.004]}} & \makecell{-0.002\\[-1pt]{\tiny[-0.007, +0.002]}} & \makecell{+0.001\\[-1pt]{\tiny[+0.001, +0.002]}} & \makecell{+0.001\\[-1pt]{\tiny[-0.001, +0.004]}} & \makecell{-0.009\\[-1pt]{\tiny[-0.013, -0.004]}} & \makecell{+0.001\\[-1pt]{\tiny[-0.000, +0.002]}} \\
+Quantile map (teacher) & \makecell{-0.001\\[-1pt]{\tiny[-0.006, +0.004]}} & \makecell{+0.014\\[-1pt]{\tiny[+0.008, +0.021]}} & \makecell{-0.007\\[-1pt]{\tiny[-0.011, -0.004]}} & \makecell{+0.002\\[-1pt]{\tiny[-0.002, +0.006]}} & \makecell{+0.007\\[-1pt]{\tiny[+0.002, +0.013]}} & \makecell{-0.001\\[-1pt]{\tiny[-0.004, +0.003]}} \\
+Teacher positive rate & \makecell{-0.001\\[-1pt]{\tiny[-0.006, +0.005]}} & \makecell{+0.014\\[-1pt]{\tiny[+0.008, +0.021]}} & \makecell{-0.007\\[-1pt]{\tiny[-0.010, -0.003]}} & \makecell{+0.002\\[-1pt]{\tiny[-0.002, +0.006]}} & \makecell{+0.007\\[-1pt]{\tiny[+0.002, +0.013]}} & \makecell{-0.000\\[-1pt]{\tiny[-0.003, +0.003]}} \\
+Teacher pseudo-label cut. & \makecell{+0.004\\[-1pt]{\tiny[-0.001, +0.011]}} & \makecell{+0.028\\[-1pt]{\tiny[+0.020, +0.037]}} & \makecell{-0.007\\[-1pt]{\tiny[-0.012, -0.003]}} & \makecell{+0.006\\[-1pt]{\tiny[+0.002, +0.012]}} & \makecell{+0.018\\[-1pt]{\tiny[+0.012, +0.025]}} & \makecell{-0.003\\[-1pt]{\tiny[-0.007, +0.001]}} \\
+Labelled cutoff & \makecell{-0.001\\[-1pt]{\tiny[-0.007, +0.006]}} & \makecell{-0.020\\[-1pt]{\tiny[-0.032, -0.008]}} & \makecell{-0.010\\[-1pt]{\tiny[-0.016, -0.004]}} & \makecell{+0.000\\[-1pt]{\tiny[-0.006, +0.008]}} & \makecell{-0.030\\[-1pt]{\tiny[-0.046, -0.012]}} & \makecell{-0.006\\[-1pt]{\tiny[-0.011, -0.001]}} \\
+Teacher alone & \makecell{-0.052\\[-1pt]{\tiny[-0.069, -0.039]}} & \makecell{-0.035\\[-1pt]{\tiny[-0.056, -0.017]}} & \makecell{-0.052\\[-1pt]{\tiny[-0.066, -0.039]}} & \makecell{-0.013\\[-1pt]{\tiny[-0.026, -0.001]}} & \makecell{-0.006\\[-1pt]{\tiny[-0.025, +0.011]}} & \makecell{-0.017\\[-1pt]{\tiny[-0.027, -0.007]}} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

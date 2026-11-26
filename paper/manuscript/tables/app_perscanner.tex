@@ -1,0 +1,54 @@
+\begin{table}[htbp]
+\floatconts{tab:app-perscanner}
+{\caption{New-scanner F1 per held-out scanner (mean over 10 student seeds) and mean over scanners. The no-teacher rows of the ResNet-18 student do not depend on the teacher and are shown once.}}
+{%
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Arm & CS2 & S360 & XR & Mean \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{ResNet-18, H-optimus-0 teacher}} \\
+\quad No-teacher student & 0.754 & 0.635 & 0.745 & 0.711 \\
+\quad KD & 0.798 & 0.639 & 0.738 & 0.725 \\
+\quad KD + TGR & 0.798 & 0.717 & 0.770 & 0.762 \\
+\quad KD + AdaBN + TGR & 0.787 & 0.755 & 0.788 & 0.777 \\
+\quad KD + TGA & 0.796 & 0.779 & 0.790 & 0.788 \\
+\quad No-teacher adaptation & 0.759 & 0.773 & 0.776 & 0.769 \\
+\quad Teacher (seed 0) & 0.833 & 0.806 & 0.803 & 0.814 \\
+\multicolumn{5}{@{}l}{\textit{ResNet-18, Virchow2 teacher}} \\
+\quad KD & 0.791 & 0.641 & 0.733 & 0.722 \\
+\quad KD + TGR & 0.790 & 0.715 & 0.738 & 0.748 \\
+\quad KD + AdaBN + TGR & 0.790 & 0.770 & 0.764 & 0.775 \\
+\quad KD + TGA & 0.797 & 0.774 & 0.774 & 0.781 \\
+\quad Teacher (seed 0) & 0.828 & 0.801 & 0.788 & 0.805 \\
+\multicolumn{5}{@{}l}{\textit{ResNet-18, UNI2-h teacher}} \\
+\quad KD & 0.776 & 0.606 & 0.731 & 0.704 \\
+\quad KD + TGR & 0.781 & 0.681 & 0.769 & 0.744 \\
+\quad KD + AdaBN + TGR & 0.779 & 0.742 & 0.784 & 0.768 \\
+\quad KD + TGA & 0.775 & 0.756 & 0.783 & 0.771 \\
+\quad Teacher (seed 0) & 0.819 & 0.779 & 0.791 & 0.797 \\
+\multicolumn{5}{@{}l}{\textit{ResNet-18, UNI teacher}} \\
+\quad KD & 0.778 & 0.614 & 0.757 & 0.716 \\
+\quad KD + TGR & 0.748 & 0.676 & 0.737 & 0.720 \\
+\quad KD + AdaBN + TGR & 0.766 & 0.699 & 0.749 & 0.738 \\
+\quad KD + TGA & 0.799 & 0.765 & 0.783 & 0.782 \\
+\quad Teacher (seed 0) & 0.786 & 0.756 & 0.758 & 0.767 \\
+\multicolumn{5}{@{}l}{\textit{ConvNeXt-T, H-optimus-0 teacher}} \\
+\quad No-teacher student & 0.780 & 0.684 & 0.743 & 0.736 \\
+\quad KD & 0.813 & 0.714 & 0.768 & 0.765 \\
+\quad KD + TGR & 0.828 & 0.785 & 0.788 & 0.801 \\
+\quad KD + TGA & 0.803 & 0.803 & 0.809 & 0.805 \\
+\quad No-teacher adaptation & 0.759 & 0.777 & 0.789 & 0.775 \\
+\quad Teacher (seed 0) & 0.833 & 0.806 & 0.803 & 0.814 \\
+\multicolumn{5}{@{}l}{\textit{ConvNeXt-T, Virchow2 teacher}} \\
+\quad No-teacher student & 0.780 & 0.684 & 0.743 & 0.736 \\
+\quad KD & 0.826 & 0.701 & 0.756 & 0.761 \\
+\quad KD + TGR & 0.828 & 0.781 & 0.760 & 0.789 \\
+\quad KD + TGA & 0.826 & 0.789 & 0.800 & 0.805 \\
+\quad No-teacher adaptation & 0.759 & 0.777 & 0.789 & 0.775 \\
+\quad Teacher (seed 0) & 0.828 & 0.801 & 0.788 & 0.805 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

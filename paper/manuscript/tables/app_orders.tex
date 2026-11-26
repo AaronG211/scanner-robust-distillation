@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\floatconts{tab:app-orders}
+{\caption{The two post-hoc layers of the ResNet-18 KD student in both orders (F1 gain of each step) and their order-free Shapley credit with 95\% intervals. AdaBN also moves the operating point, so the threshold gain shrinks when AdaBN comes first.}}
+{%
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Teacher & \makecell{TGR\\first} & \makecell{then\\AdaBN} & \makecell{AdaBN\\first} & \makecell{then\\TGR} & Shapley: threshold & Shapley: statistics \\
+\midrule
+H-optimus-0 & +0.037 & +0.015 & +0.047 & +0.005 & +0.021 [+0.013, +0.030] & +0.031 [+0.015, +0.049] \\
+Virchow2 & +0.026 & +0.027 & +0.047 & +0.005 & +0.016 [+0.008, +0.024] & +0.037 [+0.021, +0.054] \\
+UNI2-h & +0.039 & +0.025 & +0.057 & +0.007 & +0.023 [+0.016, +0.032] & +0.041 [+0.023, +0.061] \\
+UNI & +0.004 & +0.017 & +0.036 & -0.015 & -0.005 [-0.019, +0.009] & +0.027 [+0.010, +0.044] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

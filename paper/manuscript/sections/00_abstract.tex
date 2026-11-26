@@ -1,0 +1,22 @@
+\begin{abstract}
+Pathology foundation models classify mitotic figures robustly on unseen scanners but are too slow for every candidate
+cell, so they are distilled into compact networks; whether the teacher's scanner robustness survives at a fixed
+operating point is unknown. On the breast subset of MIDOG++, with
+one of three scanners held out at a time, we distil four LoRA-adapted foundation models into ResNet-18 and ConvNeXt-T
+students, decompose the student's loss into three layers (operating point, normalisation statistics, representation)
+and repair each in order of cost, with pre-specified contrasts and a paired bootstrap over images and seeds.
+Distillation transfers the teacher's ranking (AUROC) but not its robustness (F1). Most of the loss, however, needs no
+retraining: for ResNet-18 and three of the four teachers, the operating point and BatchNorm statistics account for 51\%
+to 75\% of the teacher's advantage, and for BatchNorm-free ConvNeXt-T the operating point alone accounts for 41\% to
+46\%. One logit offset fitted to the teacher's predictions on unlabelled images (TGR) reaches the bound of a
+labelled cutoff (within 0.005 F1 from five images on) and, unlike source-referenced recalibration and prior-shift
+estimators, survives changes in mitosis prevalence. Retraining on unlabelled target images gives the largest gain,
+mostly without the teacher, although for ConvNeXt-T the teacher adds 0.030 F1. Repaired layer by layer, a ConvNeXt-T
+student with 23 to 41 times fewer parameters and 62 to 98 times the throughput recovers 86\% to 99\% of its teacher's
+advantage and is non-inferior to Virchow2 at a margin of 0.02 F1; it stays 0.005 to 0.012 F1 below three LoRA
+trainings of H-optimus-0, and non-inferiority to them is not established.
+\end{abstract}
+
+\begin{keywords}
+Knowledge distillation, foundation models, domain shift, mitotic figures, test-time adaptation, recalibration.
+\end{keywords}

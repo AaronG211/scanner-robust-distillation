@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\floatconts{tab:app-efficiency}
+{\caption{Inference cost on one RTX 3090 Ti: random inputs at the resolution used in training, mixed precision (fp16 students, bf16 teachers), 5 warm-up batches, then 30 timed batches, median of 3 repetitions. Parameters include LoRA and heads.}}
+{%
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Model & Params (M) & Input (px) & Batch & Cells/s & Peak memory (GB) \\
+\midrule
+ResNet-18 student & 11.2 & 128 & 256 & 23,073 & 0.40 \\
+ConvNeXt-T student & 27.8 & 128 & 256 & 7,899 & 0.72 \\
+H-optimus-0 teacher & 1,150.5 & 224 & 64 & 80 & 3.29 \\
+Virchow2 teacher & 641.7 & 224 & 64 & 128 & 2.15 \\
+UNI2-h teacher & 690.8 & 224 & 64 & 132 & 2.41 \\
+UNI teacher & 309.6 & 224 & 64 & 342 & 1.08 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

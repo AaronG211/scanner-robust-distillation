@@ -1,0 +1,188 @@
+\section{Pre-registration and analysis log}
+\label{app:prereg}
+
+Every confirmatory family was written into a protocol file before the models it concerns were trained or the numbers it
+concerns were computed; the SHA-256 hash of the file and the time were recorded at that moment (\tableref{tab:app-protocols}).
+Later edits are listed as amendments with their own hashes. \tableref{tab:app-tests} lists every pre-specified contrast
+with its expectation and outcome. Four expectations were not met (TGR against the source positive rate for ResNet-18 at
+the natural prevalence, TENT against KD + TGA, TGR against the source cutoff for ConvNeXt-T at $\pi=0.2$, and
+non-inferiority to the seed-2 training of H-optimus-0, F2), two were met only in part (TENT against AdaBN) and one
+result was better than expected (N2d).
+The ResNet-18 arms with the H-optimus-0 teacher (no-teacher student, KD, KD + TGA, no-teacher adaptation) were run first
+and analysed before these protocols; the expectations of the later families were derived from them.
+
+Analyses not covered by a protocol are descriptive and labelled as such: the attribution and the share of the teacher's
+advantage (\figureref{fig:gap}), the additional recalibration baselines (UPA, one bias to the source mean, EM with
+bias-corrected calibration, BBSE, bias + temperature and quantile mapping to the teacher), the labelled few-image cutoff,
+the prevalence estimates, teacher test-time augmentation and the throughput measurements. The additional baselines
+were added after a literature review, once all pre-specified results of Protocols R and P had been computed; they do
+not change any pre-specified result.
+
+\begin{table}[htbp]
+\floatconts{tab:app-protocols}
+{\caption{Protocols in the order they were frozen (UTC). Each protocol file states the families, the expected direction
+of every contrast and what was already known when it was written.}}
+{%
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llp{7.2cm}@{}}
+\toprule
+Protocol & Frozen & Content \\
+\midrule
+E1.7 (multi-teacher) & 2026-11-25 08:42 & Virchow2, UNI, UNI2-h teachers and ResNet-18 students; 9 contrasts. Amendment 1 (10:44): ConvNeXt-T students with H-optimus-0; amendment 2 (12:04): teacher LoRA seeds 1--2 (descriptive). \\
+R (recalibration) & 2026-11-25 08:55 & TGR against label-free baselines (9 contrasts) and against AdaBN with 1, 2, 5 images (3 contrasts). \\
+T (TENT) & 2026-11-25 10:40 & TENT against AdaBN and against retraining, KD and no-teacher students (4 contrasts). \\
+P (prevalence shift) & 2026-11-25 18:39 & Resampling design, TGR against the source positive rate and the source cutoff at $\pi=0.2, 0.6$ (8 contrasts). \\
+N (non-inferiority) & 2026-11-25 22:03 & Margin 0.02; ConvNeXt-T against H-optimus-0 (2 contrasts) and Virchow2 (superiority + 2 contrasts). \\
+F and C & 2026-11-26 06:44 & Teacher-seed robustness (2 contrasts + key secondary) and the ConvNeXt-T no-teacher control (2 contrasts + wording rule). \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\input{tables/app_tests}
+
+\FloatBarrier
+\section{Implementation details}
+\label{app:impl}
+
+\input{tables/table1}
+
+\paragraph{Data.} Patches are cut around every annotated cell of the MIDOG++ breast subset at the native resolution:
+$144\times144$ pixels for the students (random $128\times128$ crop during training, centre crop at test time) and
+$256\times256$ pixels for the teachers (centre $224\times224$ crop). Per held-out scanner, the new-scanner set has 1{,}612
+(CS2), 1{,}648 (S360) and 1{,}175 (XR) cells. The source validation set consists of eight fixed training images per
+source scanner, drawn once with a fixed seed.
+
+\paragraph{Teachers.} Frozen encoders in bfloat16 with LoRA (rank 16, $\alpha=16$, dropout 0.1) on the query--key--value,
+output, and both MLP projections of every block; a linear head on [class token, mean patch token]; binary cross-entropy
+with positive-class weighting; AdamW (learning rate $10^{-4}$, weight decay $10^{-4}$, one-cycle schedule), batch 16,
+5 epochs, dihedral augmentation; the epoch and cutoff with the best source-validation F1 are kept. Normalisation as on
+each model card.
+
+\paragraph{Distillation.} For every source cell, the teacher's logit and its feature vector (class token and mean patch
+token) are cached for 16 views: the 8 dihedral transforms, each once in the original colours and once with a random
+H\&E stain jitter (per-channel scale $1\pm0.15$, shift $\pm0.03$ in the HED space), whose parameters are stored so that
+the student sees exactly the same view. Student loss for KD: $T^2\ell(z/T, z_T/T) + 1-\cos(Wf, f_T)$, where $\ell$ is the binary cross-entropy between
+the sigmoids of its arguments, $T=2$, $z$ and $z_T$ are the student and teacher logits, $f$ and $f_T$ their features, and
+$W$ is a learned linear projection; no expert labels are used. No-teacher student: positive-weighted
+BCE with the expert labels on the same views. AdamW (learning rate $3\times10^{-4}$ for ResNet-18, $10^{-4}$ for
+ConvNeXt-T; weight decay $10^{-4}$; one-cycle schedule), batch 64, 60 epochs, checkpoint and cutoff by source-validation F1.
+
+\paragraph{TGA and the no-teacher adaptation.} TGA adds the unlabelled cells of the fit half of the new scanner, with
+the teacher's cached logits and features on the same 16 views, to the KD training set; nothing else changes. The
+no-teacher adaptation keeps the expert labels on source cells and gives the fit-half cells the temperature-softened mean
+logit of the ten no-teacher ResNet-18 students after AdaBN on that half, with no feature term. For each student seed and
+held-out scanner, two models are trained (fit half A, fit half B), and each scores the other half.
+
+\paragraph{Post-hoc steps.} TGR as in \equationref{eq:tgr}, with the bias found by bounded scalar minimisation in
+$[-10, 10]$. AdaBN resets every BatchNorm layer's running statistics and re-estimates them as a cumulative average over
+the fit-half cells. TENT trains only the BatchNorm affine parameters with Adam on the mean binary entropy of the fit-half
+cells (batch 64, no augmentation), then re-estimates the statistics.
+
+\paragraph{Baselines for the operating point.} Source positive rate: the cutoff on the fit half that reproduces the
+student's positive rate on source validation. UPA \citep{roschewitz2023automatic}: piecewise-linear quantile mapping
+(101 quantiles) of fit-half scores onto source-validation scores, then the source cutoff. One bias, source mean: the
+offset that makes the mean fit-half probability equal the mean source-validation probability. EM
+\citep{saerens2002adjusting}, optionally after bias-corrected temperature scaling fitted on labelled source-validation
+cells \citep{alexandari2020maximum}, and BBSE \citep{lipton2018detecting} estimate the target prevalence and shift the
+logit accordingly. Teacher-referenced variants fit bias and temperature, map quantiles onto the teacher's logits,
+reproduce the teacher's positive rate, or choose the F1-optimal cutoff against the teacher's hard labels.
+
+\paragraph{Prevalence shift.} For each held-out scanner and target prevalence $\pi\in\{0.2,\dots,0.6\}$, 20 subsets are
+drawn by removing randomly chosen positives (if $\pi$ is below the natural prevalence) or negatives (otherwise); every
+method is refitted on each subset with the same cross-fitting, and counts are pooled over the 20 subsets.
+
+\paragraph{Software and hardware.} PyTorch and timm on one NVIDIA RTX 3090 Ti (24 GB). Foundation-model weights were
+obtained from their official repositories under their licences.
+
+\FloatBarrier
+\section{Additional results}
+
+\FloatBarrier
+\subsection{Per-scanner results}
+\label{app:perscanner}
+\input{tables/app_perscanner}
+
+\FloatBarrier
+\subsection{The ladder in both orders, the statistics swap, and the UNI teacher}
+\label{app:ladder}
+
+\tableref{tab:app-orders} shows why we report Shapley credit: AdaBN alone already moves the operating point, so the
+gain of TGR is smaller when it comes second. \tableref{tab:app-bnswap} shows that the retrained (TGA) students' gain on
+S360 and XR is not carried by their BatchNorm statistics. The seed-0 UNI teacher chose source cutoffs of 0.25 to 0.28
+(seeds 1 and 2: 0.39 to 0.62) and over-calls mitoses on the new scanners; TGR transfers this operating point to the
+student (threshold layer $-10\%$ of a small advantage), whereas retraining does not depend on it, so that the retrained
+student exceeds this particular teacher ($+0.016$, $+0.004$ to $+0.029$).
+
+\input{tables/app_orders}
+\input{tables/app_bnswap}
+
+\FloatBarrier
+\subsection{Recalibration baselines}
+\label{app:baselines}
+\input{tables/table3}
+\input{tables/app_recaldiff}
+\input{tables/app_priors}
+
+\FloatBarrier
+\subsection{Few images}
+\label{app:few}
+\input{tables/app_budget}
+
+\FloatBarrier
+\subsection{Teachers and inference cost}
+\label{app:teachers}
+\input{tables/app_teachers}
+\input{tables/app_efficiency}
+
+\FloatBarrier
+\subsection{TENT and the scanner probe}
+\label{app:tent}
+\input{tables/app_tent}
+\input{tables/app_probe}
+
+\FloatBarrier
+\section{Protocols F and C}
+\label{app:fc}
+Both protocols were frozen together (\tableref{tab:app-protocols}) before any of the models they concern was trained.
+
+\paragraph{Protocol C: no-teacher control for ConvNeXt-T.} The no-teacher adaptation recipe of the ResNet-18 control
+was applied unchanged to ConvNeXt-T (60 students: three held-out scanners, two fit halves, ten seeds): expert labels on
+the source cells plus the soft answers of the AdaBN-adapted ensemble of ten no-teacher ResNet-18 students on the
+unlabelled fit half, scored on the other half. Both pre-specified contrasts (two-sided, Holm) are positive and inside
+the expected range of 0 to +0.04: KD + TGA minus no-teacher adaptation is +0.030 (+0.016 to +0.045) with H-optimus-0
+and +0.030 (+0.017 to +0.046) with Virchow2 (\tableref{tab:app-tests}). The protocol fixed the wording of the main
+text in advance by the share of TGA's gain over the no-teacher student that the no-teacher adaptation reaches: if it
+was at least 0.5 for both teachers, the text would say that for both students most of the retraining gain comes from
+the unlabelled images. It is 0.57 (0.34 to 0.76) for both teachers, so this wording is used; its interval includes values
+below 0.5. The adapted no-teacher ConvNeXt-T reaches 0.759 (CS2), 0.777 (S360) and 0.789 (XR), and stays below the KD
+student with TGR ($-0.025$, $-0.040$ to $-0.013$, with H-optimus-0; $-0.014$, $-0.031$ to $-0.000$, with Virchow2;
+descriptive).
+
+\paragraph{Protocol F: teacher LoRA seed.} The ConvNeXt-T students of H-optimus-0 were distilled again, with the recipe
+unchanged, from LoRA seeds 1 and 2 of the teacher (180 students: KD, and KD + TGA on both fit halves, for ten seeds and
+three held-out scanners). The teacher caches were rebuilt exactly as for seed 0, so the stain jitter of the cached views
+also differs between teacher seeds, as in a complete re-run of the pipeline. Each student is compared with the
+teacher training it was distilled from (one view, the teacher's own source cutoff). The teachers reach 0.814, 0.821 and
+0.801 for seeds 0, 1 and 2, the retrained students 0.805, 0.809 and 0.796. The protocol expected the student to land near
+0.80 to 0.81 whatever the teacher, so that non-inferiority would fail for seed 1 and hold for seed 2. The first
+expectation was met and the second was not: seed 1, $-0.012$ ($-0.024$ to $+0.001$, Holm $p=0.090$); seed 2, $-0.005$
+($-0.018$ to $+0.008$), whose interval lies within the margin but whose Holm-adjusted $p$ of 0.027 misses 0.025
+(unadjusted 0.013). The pre-specified key secondary estimate, the gap averaged over the three trainings, is $-0.009$
+($-0.0198$ to $+0.0023$, one-sided $p=0.023$); it meets the non-inferiority criterion, but only just, and its seed-0 term
+was known when the protocol was written. Descriptively, the retrained student recovers 86\% (73\% to 101\%) and 92\%
+(74\% to 114\%) of the advantage of the seed-1 and seed-2 teachers (seed 0: 88\%), KD alone 48\% and 63\% (seed 0:
+37\%), and KD with TGR stays 0.017 ($-0.029$ to $-0.005$) and 0.007 ($-0.021$ to $+0.006$) below them. Across the three
+trainings, the retrained student's F1 varies by 0.013 (0.006 to 0.021), the teacher's by 0.020 (0.010 to 0.030).
+
+\FloatBarrier
+\section{Compute, code and data}
+\label{app:compute}
+
+The study trained 936 networks (36 LoRA teachers and 900 students) in about 22 GPU hours of training-loop time on
+one RTX 3090 Ti (\tableref{tab:app-compute}); 150 further exploratory networks are not reported. MIDOG++ is publicly
+available \citep{aubreville2023comprehensive}. \PH{Code availability statement and repository link.}
+
+\input{tables/app_compute}
+\FloatBarrier

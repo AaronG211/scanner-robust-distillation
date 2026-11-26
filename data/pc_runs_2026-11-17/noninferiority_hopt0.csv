@@ -1,0 +1,16 @@
+test,contrast,diff,lo,hi,p_one_sided,holm,non_inferior,kind,quantity,value
+N1a,cnx_kd_tga (source cutoff) minus teacher,-0.009198392854652626,-0.021571798522579465,0.002778353243144022,0.04229788510574471,0.08459577021148942,False,pre-specified,,
+N1b,cnx_kd + TGR minus teacher,-0.01344577211785436,-0.026166443811088323,-0.0010507418362055063,0.1512924353782311,0.1512924353782311,False,pre-specified,,
+,,,0.19708969826751266,0.5378701476340162,,,,descriptive,share of teacher's advantage recovered: cnx_kd source,0.37167201637864944
+,,,0.690638670287857,0.98518767865577,,,,descriptive,share of teacher's advantage recovered: cnx_kd + TGR,0.8282236710625448
+,,,0.7425143049772698,1.0398092196747961,,,,descriptive,share of teacher's advantage recovered: cnx_kd_tga source,0.8824860229039126
+,,,-0.021468505711456358,0.003115108234052399,,,,descriptive,cnx_kd_tga source minus teacher lora_seed0,-0.009259178328644868
+,,,-0.029025765607629116,-0.0024707334298373516,,,,descriptive,cnx_kd_tga source minus teacher lora_seed1,-0.01587217384799533
+,,,-0.009510173139211636,0.017037388310371437,,,,descriptive,cnx_kd_tga source minus teacher lora_seed2,0.0037076102339536066
+,,,-0.019016952596901532,0.004816359474056897,,,,descriptive,cnx_kd_tga source minus mean of teacher LoRA seeds,-0.007141247314228827
+,,,-0.016867883423023693,0.010485904020518654,,,,descriptive,"same treatment, labelled cutoff: cnx_kd_tga oracle minus teacher oracle",-0.0033013201970570893
+,,,-0.011233475064244852,0.012622662509774583,,,,descriptive,"same treatment, 8-view TTA: cnx_kd_tga TTA minus teacher TTA",0.0005950633524899329
+,,,-0.007371044850842412,0.0028350528560673167,,,,descriptive,teacher TTA minus teacher single view,-0.002191777233970238
+,,,0.014347122045762944,0.044728936502000154,,,,descriptive,cnx_kd source minus cnx_control source,0.02909258374377266
+,,,-0.005660514790029147,0.014205370305886866,,,,descriptive,post hoc: cnx_kd_tga source minus cnx_kd + TGR,0.004247379263201734
+,,,-0.03823467044530583,-0.014161240697181506,,,,descriptive,r18_kd_tga source minus teacher (interval seen before; not a test),-0.025625615674268132

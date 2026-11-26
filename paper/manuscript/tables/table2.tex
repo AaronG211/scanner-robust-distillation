@@ -1,0 +1,29 @@
+\begin{table}[t]
+\floatconts{tab:main}
+{\caption{F1 on the unseen scanner (mean over 10 student seeds, then over the three held-out scanners; 95\% interval from
+a paired bootstrap over images and seeds). Each student uses its own teacher for TGR. --: not applicable (ConvNeXt-T has
+no BatchNorm) or not run. Last row: (student $-$ no-teacher student) / (teacher $-$ no-teacher student).
+$^\dagger$UNI's advantage over the no-teacher student is only 0.055 F1, so its share is unstable; its seed-0 LoRA
+teacher chose an unusually low cutoff on the source scanners.}}
+{%
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcccc@{\hspace{8pt}}cc@{}}
+\toprule
+ & \multicolumn{4}{c}{ResNet-18 student (11 M)} & \multicolumn{2}{c}{ConvNeXt-T student (28 M)} \\
+\cmidrule(lr){2-5}\cmidrule(l){6-7}
+Teacher & H-optimus-0 & Virchow2 & UNI2-h & UNI & H-optimus-0 & Virchow2 \\
+\midrule
+No-teacher student & \makecell{0.711\\{\scriptsize[.682, .735]}} & \makecell{0.711\\{\scriptsize[.682, .735]}} & \makecell{0.711\\{\scriptsize[.682, .735]}} & \makecell{0.711\\{\scriptsize[.682, .735]}} & \makecell{0.736\\{\scriptsize[.708, .759]}} & \makecell{0.736\\{\scriptsize[.708, .759]}} \\
+Distillation (KD) & \makecell{0.725\\{\scriptsize[.696, .748]}} & \makecell{0.722\\{\scriptsize[.694, .744]}} & \makecell{0.704\\{\scriptsize[.673, .729]}} & \makecell{0.716\\{\scriptsize[.685, .741]}} & \makecell{0.765\\{\scriptsize[.740, .785]}} & \makecell{0.761\\{\scriptsize[.736, .781]}} \\
+\quad + TGR & \makecell{0.762\\{\scriptsize[.739, .779]}} & \makecell{0.748\\{\scriptsize[.724, .767]}} & \makecell{0.744\\{\scriptsize[.720, .762]}} & \makecell{0.720\\{\scriptsize[.693, .741]}} & \makecell{0.801\\{\scriptsize[.781, .817]}} & \makecell{0.789\\{\scriptsize[.768, .806]}} \\
+\quad + AdaBN + TGR & \makecell{0.777\\{\scriptsize[.752, .796]}} & \makecell{0.775\\{\scriptsize[.750, .793]}} & \makecell{0.768\\{\scriptsize[.745, .786]}} & \makecell{0.738\\{\scriptsize[.709, .759]}} & -- & -- \\
+KD + TGA (retrained) & \makecell{0.788\\{\scriptsize[.768, .805]}} & \makecell{0.781\\{\scriptsize[.760, .798]}} & \makecell{0.771\\{\scriptsize[.750, .789]}} & \makecell{0.782\\{\scriptsize[.761, .799]}} & \makecell{0.805\\{\scriptsize[.784, .822]}} & \makecell{0.805\\{\scriptsize[.785, .821]}} \\
+No-teacher adaptation & \makecell{0.769\\{\scriptsize[.744, .788]}} & \makecell{0.769\\{\scriptsize[.744, .788]}} & \makecell{0.769\\{\scriptsize[.744, .788]}} & \makecell{0.769\\{\scriptsize[.744, .788]}} & \makecell{0.775\\{\scriptsize[.749, .795]}} & \makecell{0.775\\{\scriptsize[.749, .795]}} \\
+Teacher (seed 0) & \makecell{0.814\\{\scriptsize[.794, .830]}} & \makecell{0.805\\{\scriptsize[.785, .822]}} & \makecell{0.797\\{\scriptsize[.776, .813]}} & \makecell{0.767\\{\scriptsize[.743, .785]}} & \makecell{0.814\\{\scriptsize[.794, .830]}} & \makecell{0.805\\{\scriptsize[.785, .822]}} \\
+\midrule
+Share recovered by KD + TGA & \makecell{75\%\\{\scriptsize[64, 85]}} & \makecell{74\%\\{\scriptsize[62, 87]}} & \makecell{70\%\\{\scriptsize[54, 85]}} & \makecell{128\%$^\dagger$\\{\scriptsize[106, 174]}} & \makecell{88\%\\{\scriptsize[74, 104]}} & \makecell{99\%\\{\scriptsize[83, 121]}} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

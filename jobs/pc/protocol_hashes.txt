@@ -1,0 +1,23 @@
+ed91d6540b62d05ba7083bcbf52e0ee1337a4b84e6616632127e9dcfeb0755e3  MULTI_TEACHER_PROTOCOL.md
+2026-11-25T08:42:31Z  MULTI_TEACHER_PROTOCOL.md frozen before any new-teacher run
+55519670894132a78af06856d3ef1a4b65848fbf6356a6162ced4108db61e3d8  RECAL_PROTOCOL.md
+2026-11-25T08:55:39Z  RECAL_PROTOCOL.md frozen before e0_cells_r18 / cnx students exist
+1e804b9eca1d8daeefb2c67ea38e66cda8ec8caea0098fae1c00fc6cf7725912  TENT_PROTOCOL.md
+frozen 2026-11-25T10:40:12Z TENT_PROTOCOL.md
+0f99886987be312585d9c97b155e11fd863c1214a2ca5a143724c298405ec154  MULTI_TEACHER_PROTOCOL.md  (after amendment 1)
+amended 2026-11-25T10:44:14Z MULTI_TEACHER_PROTOCOL.md
+cbd77a11442faa6ea244a97cb1710724d4752dd606443cc70b31bc641a1f47d3  MULTI_TEACHER_PROTOCOL.md  (amendment 1, time corrected to 04:44 CT)
+d4e4b298ef5d934d20c68c7d5cde6cebe864ac0458604c072a75ccfdaa26ef51  TENT_PROTOCOL.md  (time in text corrected to 04:40 CT; no other change)
+7b0ac0c4e2c551d63a1a2727e2460dd82e927ccc0c169ce0e40d95ac9baf7fd9  MULTI_TEACHER_PROTOCOL.md  (after amendment 2)
+amended 2026-11-25T12:04:37Z MULTI_TEACHER_PROTOCOL.md (amendment 2)
+7c3cba3a5698883c0b84440e5cf807b3381971692b7f1b1fb8e36cc20e9883d1  MULTI_TEACHER_PROTOCOL.md  (amendment 2, time in text corrected to 06:04 CT)
+0771d7688f4dea65d1d85170994c6e168861ca82e504b9331a704cb9fb63b2d5  PREVALENCE_SHIFT_PROTOCOL.md
+frozen 2026-11-25T18:39:32Z PREVALENCE_SHIFT_PROTOCOL.md (before any resampled number)
+b8c5e220d7e453c38ef113f95a03fb4ded63e18da856921d3eb8908353aaabeb  PREVALENCE_SHIFT_PROTOCOL.md  (time in text corrected to 12:39 CT; no other change)
+b51fe87bf4e03f19aea55c2864d38abd4d14b677b89f6588aab8919b11b920a4  NONINFERIORITY_PROTOCOL.md
+frozen 2026-11-25T22:03:46Z NONINFERIORITY_PROTOCOL.md (margin 0.02 agreed with user; before any ConvNeXt student-vs-teacher interval and before any ConvNeXt-Virchow2 student)
+818fba69504a9bc86f5c7951f7a9e2637fc7f6694a062731a3740fee056e8cd2  TEACHER_SEED_AND_CONTROL_PROTOCOL.md
+frozen 2026-11-26T06:44:23Z TEACHER_SEED_AND_CONTROL_PROTOCOL.md (before any teacher-seed-1/2 cache or student, before any ConvNeXt no-teacher adaptation)
+62550985152eda4f85d15e6df2519a55a39dba15d77a4e2cf1369f6304f36166  TEACHER_SEED_AND_CONTROL_PROTOCOL.md  (time in text corrected to 00:44 CT; no other change)
+bc306c73919d55871c072c0ad0251df0ef071edc79886d3d92fe1a2ce3673df7  scripts/teacher_seed_robustness.py  analysis script written before results (protocol F/C)
+9427e4615abd2328983a7e4a3a4a97a51fc2c605c1a52b7054ce62a197a3e97d  scripts/cnx_free_control.py  analysis script written before results (protocol F/C)

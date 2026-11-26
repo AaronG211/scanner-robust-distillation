@@ -1,0 +1,27 @@
+\begin{table}[t]
+\floatconts{tab:ladder}
+{\caption{The repair ladder. Each step acts on one layer of the student and needs different things on the unseen
+scanner. All label-free steps are fitted on the unlabelled cells of one half of the new-scanner images and scored on the
+other half, then the halves are swapped (cross-fitting).}}
+{%
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}llcccl@{}}
+\toprule
+ & & \multicolumn{3}{c}{Needs on the new scanner} & \\
+\cmidrule(lr){3-5}
+Step & Layer & Unlabelled images & Teacher & Retraining & Students \\
+\midrule
+No-teacher student (0\%) & -- & -- & -- & -- & both \\
+KD, source cutoff & -- & -- & -- & -- & both \\
+\quad + TGR & operating point & \checkmark\ (about 5) & probabilities & -- & both \\
+\quad + AdaBN & BN statistics & \checkmark & -- & -- & ResNet-18 \\
+\quad + TENT & BN scale and shift & \checkmark & -- & at test time & ResNet-18 \\
+KD + TGA & representation & \checkmark\ (25 per half) & soft labels & \checkmark & both \\
+No-teacher adaptation & representation & \checkmark\ (25 per half) & -- & \checkmark & both \\
+Labelled cutoff (upper bound) & operating point & labelled & -- & -- & both \\
+Teacher (100\%) & -- & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

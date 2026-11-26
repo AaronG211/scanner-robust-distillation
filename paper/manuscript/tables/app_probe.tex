@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\floatconts{tab:app-probe}
+{\caption{Linear probe for the training scanner on source-cell features (image-grouped cross-validation, two classes, mean over folds and seeds). All models encode the scanner almost perfectly, so robustness does not mean that scanner information is absent.}}
+{%
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Features & Dimension & Probe accuracy \\
+\midrule
+H-optimus-0 & 3072 & 1.000 \\
+Virchow2 & 2560 & 0.999 \\
+UNI2-h & 3072 & 1.000 \\
+UNI & 2048 & 1.000 \\
+H-optimus-0 (PCA 512) & 512 & 0.814 \\
+Virchow2 (PCA 512) & 512 & 0.824 \\
+UNI2-h (PCA 512) & 512 & 0.853 \\
+UNI (PCA 512) & 512 & 0.859 \\
+ResNet-18 no-teacher & 512 & 0.962 \\
+ResNet-18 KD (H-optimus-0) & 512 & 0.999 \\
+ResNet-18 KD + TGA (H-optimus-0, half A) & 512 & 0.999 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

@@ -1,0 +1,16 @@
+test,contrast,diff,lo,hi,p_one_sided,holm,non_inferior,kind,quantity,value
+N2c,"cnx_kd_tga_virchow2 minus cnx_kd_virchow2 (superiority, two-sided)",0.0437582444719572,0.03054251853743069,0.05903273722887916,,9.99950002499875e-05,,pre-specified,,
+N2d,cnx_kd_tga_virchow2 (source cutoff) minus teacher,-0.0005756458779543339,-0.013749732176743704,0.012215348641007822,0.0018999050047497626,0.003799810009499525,True,pre-specified,,
+N2e,cnx_kd_virchow2 + TGR minus teacher,-0.015954245488713714,-0.03058394676591253,-0.0018685460260375662,0.28348582570871456,0.28348582570871456,False,pre-specified,,
+,,,0.13902934683256127,0.5795734486609,,,,descriptive,share of teacher's advantage recovered: cnx_kd_virchow2 source,0.363392155940745
+,,,0.6010842411260997,0.9706540913418144,,,,descriptive,share of teacher's advantage recovered: cnx_kd_virchow2 + TGR,0.7709066868709301
+,,,0.8267441438100128,1.208103770519929,,,,descriptive,share of teacher's advantage recovered: cnx_kd_tga_virchow2 source,0.9917340734500455
+,,,-0.01328259396666022,0.012238061003747764,,,,descriptive,cnx_kd_tga_virchow2 source minus teacher lora_seed0,-0.00032556407177930513
+,,,-0.012726937141430939,0.012360813500616007,,,,descriptive,cnx_kd_tga_virchow2 source minus teacher lora_seed1,0.0001683296044213689
+,,,-0.01103941879122149,0.014931808878193498,,,,descriptive,cnx_kd_tga_virchow2 source minus teacher lora_seed2,0.0018311121603029612
+,,,-0.011873773642192862,0.012605741952388123,,,,descriptive,cnx_kd_tga_virchow2 source minus mean of teacher LoRA seeds,0.000557959230981675
+,,,-0.01998159044933947,0.009558110762312859,,,,descriptive,"same treatment, labelled cutoff: cnx_kd_tga_virchow2 oracle minus teacher oracle",-0.004488370912885897
+,,,0.004967704676214738,0.028130640540459762,,,,descriptive,"same treatment, 8-view TTA: cnx_kd_tga_virchow2 TTA minus teacher TTA",0.016137909392659133
+,,,-0.015717383567511678,-0.002224036230826119,,,,descriptive,teacher TTA minus teacher single view,-0.008715552767377677
+,,,0.008824198231210315,0.04281049140203713,,,,descriptive,cnx_kd_virchow2 source minus cnx_control source,0.025306926620268566
+,,,0.006253401802872083,0.02470690560105688,,,,descriptive,post hoc: cnx_kd_tga_virchow2 source minus cnx_kd_virchow2 + TGR,0.01537859961075938

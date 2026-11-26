@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\floatconts{tab:app-priors}
+{\caption{Label-free estimates of the new scanner's mitosis prevalence (mean over 10 student seeds) against the truth. The prior-shift estimators follow the student's own shifted positive rate and amplify it (S360, XR).}}
+{%
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llcccccc@{}}
+\toprule
+KD student & Scanner & True & \makecell{Student positive\\rate} & EM & EM + BCTS & BBSE & \makecell{Teacher positive\\rate} \\
+\midrule
+ConvNeXt-T & CS2 & 0.43 & 0.39 & 0.53 & 0.40 & 0.37 & 0.43 \\
+ConvNeXt-T & S360 & 0.35 & 0.24 & 0.20 & 0.15 & 0.17 & 0.47 \\
+ConvNeXt-T & XR & 0.38 & 0.55 & 0.62 & 0.59 & 0.55 & 0.47 \\
+ResNet-18 & CS2 & 0.43 & 0.43 & 0.58 & 0.45 & 0.41 & 0.43 \\
+ResNet-18 & S360 & 0.35 & 0.21 & 0.09 & 0.04 & 0.08 & 0.47 \\
+ResNet-18 & XR & 0.38 & 0.58 & 0.66 & 0.67 & 0.61 & 0.47 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

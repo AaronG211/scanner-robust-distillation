@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\floatconts{tab:app-tent}
+{\caption{TENT on the ResNet-18 students (new-scanner F1, mean over seeds and scanners). Primary setting: learning rate $10^{-3}$, one epoch; the others are a descriptive sensitivity analysis.}}
+{%
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Student & lr & Epochs & AdaBN & AdaBN + TENT & + TGR \\
+\midrule
+No-teacher & 0.0001 & 1 & 0.748 & 0.748 & 0.757 \\
+No-teacher & 0.001 & 1 & 0.748 & 0.753 & 0.759 \\
+No-teacher & 0.001 & 3 & 0.748 & 0.756 & 0.760 \\
+No-teacher & 0.01 & 1 & 0.748 & 0.693 & 0.707 \\
+KD & 0.0001 & 1 & 0.772 & 0.772 & 0.780 \\
+KD & 0.001 & 1 & 0.772 & 0.777 & 0.784 \\
+KD & 0.001 & 3 & 0.772 & 0.778 & 0.784 \\
+KD & 0.01 & 1 & 0.772 & 0.726 & 0.735 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

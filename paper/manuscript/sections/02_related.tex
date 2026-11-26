@@ -1,0 +1,28 @@
+\section{Related work}
+\label{sec:related}
+
+\paragraph{Mitoses and foundation models under domain shift.} Mitosis classifiers lose accuracy on unseen scanners and
+tumour types \citep{aubreville2021quantifying,aubreville2023mitosis,aubreville2024domain}. At the cell level,
+LoRA-adapted pathology foundation models are among the strongest out-of-domain classifiers
+\citep{ammeling2026benchmarking}, yet their features still encode the scanner or centre
+\citep{dejong2025current,komen2025towards}. On rescanned slides their AUC is largely stable while their probabilities
+shift \citep{thiringer2026scanner}, so a fixed threshold changes its sensitivity \citep{wen2026tempering}; on MIDOG++,
+F1 at a fixed threshold, calibration and count error likewise disagree under domain shift \citep{desouza2026metric}.
+
+\paragraph{Distilling foundation models.} Pathology encoders distilled into ViT-B, ViT-S or convolutional students keep
+most of their teachers' average downstream performance \citep{filiot2025distilling,cai2026deployment,lenz2026multi},
+and H0-mini was reported to be more robust to scanner variation than its teacher in embedding space
+\citep{filiot2025distilling}. In natural images, however, standard distillation transfers in-distribution accuracy more
+reliably than out-of-distribution robustness \citep{stanton2021does,zhou2023distilling,addepalli2024leveraging}, and
+unlabelled target data alone can give large adaptation gains \citep{sagawa2022extending}. We therefore measure F1 at a
+deployable operating point and separate the teacher's contribution from that of the target data.
+
+\paragraph{Label-free recalibration and adaptation.} Existing label-free repairs of the operating point each rest on an
+assumption that scanner shift can violate. UPA aligns target scores to source scores and so assumes preserved
+prevalence \citep{roschewitz2023automatic}. Conversely, prior-shift methods estimate the target prevalence
+\citep{saerens2002adjusting,lipton2018detecting,alexandari2020maximum} but assume unchanged class-conditional
+distributions \citep{garg2020unified}, which acquisition shift breaks; prevalence shift itself degrades deployed
+classifiers \citep{godau2023deployment}. One-parameter logit corrections from few unlabelled samples exist for other
+tasks \citep{zhou2024batch,yang2026your}, and AdaBN and TENT adapt normalisation layers
+\citep{li2018adaptive,schneider2020improving,wang2021tent}. TGR is an intercept-only correction too; its new element is
+the reference, the teacher's predictions on the same target cells, which avoids both assumptions if the teacher is robust.

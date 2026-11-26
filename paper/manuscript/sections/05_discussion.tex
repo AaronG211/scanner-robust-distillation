@@ -1,0 +1,36 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{What the decomposition shows.} Distilled students can look robust by embedding or ranking measures
+\citep{filiot2025distilling} yet fail at a fixed operating point: they keep the teacher's ranking but not the location
+of its scores on a new scanner. The operating point fails first and, for a BatchNorm network, the
+normalisation statistics second; both are restored from unlabelled images without retraining. Only the
+representation gap needs retraining, and for ResNet-18 about a quarter of the teacher's advantage remains that none of
+our steps closes. The teacher is indispensable mainly at the operating point, where its predictions carry the target
+prevalence that no source-referenced method can know; in retraining, its soft labels help ConvNeXt-T more than
+ResNet-18 (+0.030 against +0.002 to +0.019 F1).
+
+\paragraph{Practical guidance.} With one or two unlabelled images, recalibrate against the teacher
+(TGR); with one image this beats re-estimating BatchNorm statistics, and at every budget it matches or beats a cutoff
+chosen from as many labelled images. With five or more images and a BatchNorm student, re-estimate the statistics, then
+recalibrate; a BatchNorm-free student should be recalibrated first. If compute allows, retrain on the unlabelled images.
+If the target prevalence may differ from the source, avoid source-referenced recalibration, and do not trust
+prior-shift estimates under acquisition shift.
+
+\paragraph{Relation to previous work.} At a deployed operating point, a distilled task model is not as robust as its
+teacher, as in natural images \citep{addepalli2024leveraging}. Teacher-referenced recalibration removes UPA's assumption of preserved prevalence
+\citep{roschewitz2023automatic}, and prior-shift estimators fail under acquisition shift, as predicted by
+\citet{garg2020unified}.
+
+\paragraph{Limitations.} All results come from one dataset, one organ and three scanners; their consistency over four
+teachers, two students and three held-out scanners supports them within this setting, not beyond it. The prevalence
+shift was simulated by resampling, which changes the class mix but not cell appearance. We classify given candidates and
+do not detect them. The ResNet-18 pseudo-labels of the no-teacher control may understate
+what target images alone can do for ConvNeXt-T. TGR inherits its teacher's operating point and fails when that is poor (UNI,
+Appendix~\ref{app:ladder}). Except for ConvNeXt-T with H-optimus-0, each student was distilled from one LoRA training of
+its teacher.
+
+\paragraph{Conclusion.} The scanner robustness lost in distillation sits in three layers, the operating point, the
+normalisation statistics and the representation, each repaired at a different cost. Repaired layer by layer, mostly
+from a few unlabelled images, a student 23 to 41 times smaller recovers 86\% to 99\% of its teacher's advantage on an
+unseen scanner.

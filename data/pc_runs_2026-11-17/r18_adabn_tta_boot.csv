@@ -1,0 +1,10 @@
+contrast,a,b,diff,ci_lo,ci_hi,p_boot
+KD vs control (single),r18_kd/none_single,r18_control/none_single,0.0163,-0.0006,0.0427,0.06
+AdaBN on KD student,r18_kd/adabn_single,r18_kd/none_single,0.0402,0.0014,0.0723,0.0436
+TGA on KD student,r18_kd_target/none_single,r18_kd/none_single,0.0559,0.0266,0.0828,0.0008
+TGA vs AdaBN (same unlabeled data),r18_kd_target/none_single,r18_kd/adabn_single,0.0157,-0.0065,0.0403,0.1864
+AdaBN on top of TGA,r18_kd_target/adabn_single,r18_kd_target/none_single,-0.0093,-0.02,0.0021,0.1076
+TTA on TGA student,r18_kd_target/none_tta,r18_kd_target/none_single,0.0173,0.0022,0.0354,0.0316
+TTA on KD student (no adaptation),r18_kd/none_tta,r18_kd/none_single,0.0009,-0.0267,0.0172,0.8936
+best (KD+TGA+TTA) vs teacher-free AdaBN+TTA,r18_kd_target/none_tta,r18_control/adabn_tta,0.0276,0.0016,0.058,0.0392
+best (KD+TGA+TTA) vs KD+AdaBN+TTA,r18_kd_target/none_tta,r18_kd/adabn_tta,0.0187,-0.0072,0.0434,0.1584

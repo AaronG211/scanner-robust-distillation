@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\floatconts{tab:app-budget}
+{\caption{New-scanner F1 with $n$ images per half from the new scanner (mean over folds, seeds and 10 image draws; the same draws for every method). TGR and AdaBN use the images unlabelled; the labelled cutoff uses their labels. Source cutoff: 0.725 (ResNet-18), 0.765 (ConvNeXt-T).}}
+{%
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+$n$ & R18: TGR & R18: AdaBN & R18: labelled cutoff & CNX: TGR & CNX: labelled cutoff \\
+\midrule
+1 & 0.740 & 0.715 & 0.646 & 0.791 & 0.705 \\
+2 & 0.755 & 0.743 & 0.734 & 0.798 & 0.775 \\
+5 & 0.757 & 0.757 & 0.743 & 0.799 & 0.789 \\
+10 & 0.762 & 0.772 & 0.760 & 0.801 & 0.798 \\
+25 & 0.762 & 0.772 & 0.762 & 0.801 & 0.800 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

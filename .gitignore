@@ -1,0 +1,26 @@
+# OS / Python
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+
+# LaTeX build products
+paper/manuscript/*.aux
+paper/manuscript/*.log
+paper/manuscript/*.out
+paper/manuscript/*.bbl
+paper/manuscript/*.blg
+paper/manuscript/*.fls
+paper/manuscript/*.fdb_latexmk
+paper/manuscript/*.synctex.gz
+paper/manuscript/build.log
+
+# preview tables written by scripts/paper_tables.py (the manuscript uses paper/manuscript/tables/)
+paper/tables/
+
+# never commit data or weights: MIDOG++ images, patches, feature caches, checkpoints
+*.tiff
+*.pt
+*.pth
+*.safetensors
+checkpoints/

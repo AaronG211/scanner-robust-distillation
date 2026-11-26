@@ -1,0 +1,10 @@
+test,contrast,diff,lo,hi,p,holm,significant,kind,quantity,value
+C1,cnx_kd_tga minus cnx_free_tga (two-sided),0.029554377170504798,0.016299405036299577,0.044743214148424956,9.99950002499875e-05,0.000199990000499975,True,pre-specified,,
+C2,cnx_kd_tga_virchow2 minus cnx_free_tga (two-sided),0.029543057720905153,0.01651973994125788,0.045664791544020526,0.000199990000499975,0.000199990000499975,True,pre-specified,,
+,,,0.34421770044363426,0.7550029348813839,,,,descriptive,share of cnx_kd_tga's gain over cnx_control that needs no teacher,0.5721499899794447
+,,,0.3013592184380599,0.6679344964655726,,,,descriptive,cnx_free_tga: share of the hopt0 teacher's advantage recovered,0.5049143691614729
+,,,0.3367743283674428,0.7571003335831615,,,,descriptive,share of cnx_kd_tga_virchow2's gain over cnx_control that needs no teacher,0.5722437626129239
+,,,0.33626151708935853,0.7705033066527653,,,,descriptive,cnx_free_tga: share of the virchow2 teacher's advantage recovered,0.5675136377024959
+,,,0.02046633578835253,0.05883366930854207,,,,descriptive,cnx_free_tga minus cnx_control,0.03952211337132061
+,,,-0.04023117308638113,-0.013250785912551497,,,,descriptive,cnx_free_tga minus cnx_kd + TGR (H-optimus-0),-0.025306997907303064
+,,,-0.030845389778864044,-0.0001964471106577825,,,,descriptive,cnx_free_tga minus cnx_kd_virchow2 + TGR (Virchow2),-0.014164458110145772

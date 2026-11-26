@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\floatconts{tab:app-teachers}
+{\caption{Teachers on the unseen scanner: F1 for three LoRA seeds (mean over the three held-out scanners), their mean, and the range of AUROC over seeds; below, seed 0 with eight-view test-time augmentation and a TTA cutoff from source validation. Seed-0 values are re-evaluated from the saved LoRA weights and can differ in the third decimal from the cached predictions used elsewhere (UNI: 0.766 here, 0.767 in \tableref{tab:main}).}}
+{%
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Teacher & Seed 0 & Seed 1 & Seed 2 & Mean & AUROC range \\
+\midrule
+H-optimus-0 & 0.814 & 0.821 & 0.801 & 0.812 & 0.925--0.929 \\
+Virchow2 & 0.805 & 0.805 & 0.803 & 0.804 & 0.917--0.918 \\
+UNI2-h & 0.797 & 0.792 & 0.787 & 0.792 & 0.913--0.916 \\
+UNI & 0.766 & 0.782 & 0.786 & 0.778 & 0.905--0.908 \\
+\midrule
+H-optimus-0, 8-view TTA (seed 0) & 0.812 & & & & \\
+Virchow2, 8-view TTA (seed 0) & 0.797 & & & & \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

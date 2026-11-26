@@ -1,0 +1,36 @@
+\begin{table}[htbp]
+\floatconts{tab:app-compute}
+{\caption{Networks trained for the study and their training-loop time on one RTX 3090 Ti (excluding teacher caching and evaluation). Not in the paper: two superseded exploratory variants.}}
+{%
+\tiny
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llrrc@{}}
+\toprule
+Group & Networks & $n$ & GPU hours & In paper \\
+\midrule
+teacher & H-optimus-0 LoRA, seed 0 & 3 & 1.24 & yes \\
+teacher & uni-lora, seed 0 & 3 & 0.12 & yes \\
+teacher & uni2h-lora, seed 0 & 3 & 0.27 & yes \\
+teacher & virchow2-lora, seed 0 & 3 & 0.28 & yes \\
+teacher & h-optimus-0-lora, seeds 1-2 & 6 & 1.29 & yes \\
+teacher & uni-lora, seeds 1-2 & 6 & 0.24 & yes \\
+teacher & uni2h-lora, seeds 1-2 & 6 & 0.54 & yes \\
+teacher & virchow2-lora, seeds 1-2 & 6 & 0.56 & yes \\
+ResNet-18 & no-teacher student & 30 & 0.26 & yes \\
+ResNet-18 & KD, H-optimus-0 & 30 & 0.26 & yes \\
+ResNet-18 & KD, Virchow2 / UNI / UNI2-h & 90 & 0.85 & yes \\
+ResNet-18 & KD + TGA, H-optimus-0 (halves A/B) & 60 & 0.69 & yes \\
+ResNet-18 & KD + TGA, Virchow2 / UNI / UNI2-h (halves A/B) & 180 & 2.31 & yes \\
+ResNet-18 & no-teacher adaptation (halves A/B) & 60 & 0.73 & yes \\
+ConvNeXt-T & no-teacher student & 30 & 0.66 & yes \\
+ConvNeXt-T & KD, H-optimus-0 / Virchow2 & 60 & 1.31 & yes \\
+ConvNeXt-T & KD + TGA, H-optimus-0 / Virchow2 (halves A/B) & 120 & 3.55 & yes \\
+ConvNeXt-T & no-teacher adaptation (halves A/B; Protocol C) & 60 & 1.73 & yes \\
+ConvNeXt-T & KD, H-optimus-0 LoRA seeds 1-2 (Protocol F) & 60 & 1.28 & yes \\
+ConvNeXt-T & KD + TGA, H-optimus-0 LoRA seeds 1-2 (halves A/B; Protocol F) & 120 & 3.50 & yes \\
+ResNet-18 & KD + target adaptation without cross-fitting (superseded) & 30 & 0.40 & no \\
+ResNet-18 & TGA variants (ResNet pseudo-labeller, soft-only) & 120 & 1.48 & no \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

@@ -1,6 +1,6 @@
-# Recovering Scanner Robustness Lost in Distillation
+# Distilling Pathology Foundation Models for Mitotic Figure Classification
 
-**A case study of pathology foundation models for mitotic figure classification**
+**The loss and recovery of scanner robustness**
 
 Shenghan Gao, SeongJun Kwon, Axel Ramirez · Washington University in St. Louis
 
@@ -48,10 +48,12 @@ ResNet-18 (BatchNorm) and ConvNeXt-T (LayerNorm) students.
 - **Controls without any foundation model** separate the teacher's contribution from that of the unlabelled target
   images.
 - **Pre-registration:** every confirmatory contrast was written down, with its expected direction and a file hash,
-  before the corresponding models were trained ([`protocols/`](protocols/)).
+  before it was tested; each protocol records which models and point estimates already existed
+  ([`protocols/`](protocols/)).
 - **Uncertainty and corrections:** a paired bootstrap over images and seeds, with Holm correction within each family.
 - **No leakage:** all target images are used for evaluation through cross-fitting, so a cell is never scored by a
-  model that saw its image.
+  model that saw its image. One arm, KD + AdaBN + TGR, departs from this (Appendix B of the paper); refitted strictly
+  for H-optimus-0 it rises from 0.777 to 0.779, so the departure does not inflate it.
 
 ## Results
 
@@ -62,10 +64,12 @@ New-scanner F1 (mean over 10 seeds and 3 held-out scanners), H-optimus-0 teacher
 | No-teacher student (expert labels only) | 0.711 | 0.736 |
 | Distilled (KD) | 0.725 | 0.765 |
 | + TGR (operating point) | 0.762 | 0.801 |
-| + AdaBN + TGR (statistics) | 0.777 | — |
+| + AdaBN + TGR (statistics)¹ | 0.777 | — |
 | KD + TGA (retrained) | 0.788 | 0.805 |
 | Teacher (H-optimus-0, 1.15 B parameters) | 0.814 | 0.814 |
 | Throughput (cells/s, RTX 3090 Ti) | 23,073 | 7,899 (teacher: 80) |
+
+¹ Not strictly cross-fitted (see above); 0.779 when refitted strictly.
 
 ![Where the gap sits](figures/paper/fig2_where_the_gap_sits.png)
 
@@ -84,11 +88,13 @@ New-scanner F1 (mean over 10 seeds and 3 held-out scanners), H-optimus-0 teacher
   ConvNeXt-T). For ConvNeXt-T the teacher still adds 0.030 F1.
 - **A repaired small student comes close to its teacher.** ConvNeXt-T recovers 86–99% of its teacher's advantage and
   is non-inferior to Virchow2 at a margin of 0.02 F1. Against three LoRA trainings of H-optimus-0 it trails by
-  0.005–0.012 F1, and non-inferiority is not established.
+  0.005–0.012 F1, and non-inferiority to any single training is not established (averaged over the three, the
+  pre-specified secondary estimate meets the margin only narrowly).
 
 ![The operating point](figures/paper/fig3_threshold_layer.png)
 
-In total the study trained 936 networks (36 LoRA teachers, 900 students) in about 22 GPU hours on one RTX 3090 Ti.
+In total the study trained 936 networks (36 LoRA teachers, 900 students) in about 22 GPU hours on one RTX 3090 Ti
+(the three seed-0 H-optimus-0 teachers were trained separately by a co-author).
 
 ## Repository layout
 
@@ -140,9 +146,9 @@ for pixel. To check that one of the six protocols behind the paper is unchanged 
 ## Citation
 
 ```bibtex
-@misc{gao2026recovering,
-  title  = {Recovering Scanner Robustness Lost in Distillation: A Case Study of Pathology Foundation Models
-            for Mitotic Figure Classification},
+@misc{gao2026distilling,
+  title  = {Distilling Pathology Foundation Models for Mitotic Figure Classification: The Loss and Recovery
+            of Scanner Robustness},
   author = {Gao, Shenghan and Kwon, SeongJun and Ramirez, Axel},
   year   = {2026},
   note   = {Preprint}

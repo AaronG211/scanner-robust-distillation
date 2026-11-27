@@ -67,6 +67,9 @@ pd.set_option("display.width", 200)
 print("ConvNeXt-T students, new-scanner F1 (mean over seeds, then folds):"); print(tb.round(3).to_string()); print()
 est, lo, hi, p = stat(mean(("cnx_kd_tga", "source cutoff")) - mean(("cnx_kd", "source cutoff")))
 print(f"PRE-SPECIFIED  cnx_kd_tga vs cnx_kd (source cutoff): {est:+.4f} [{lo:+.4f}, {hi:+.4f}], p = {p:.4f}")
+if len(sys.argv) == 1:                            # E1.7 amendment 1 (one-contrast family, two-sided, no Holm step)
+    pd.DataFrame([dict(test="E1.7a", contrast="cnx_kd_tga minus cnx_kd (source cutoff)", diff=est, lo=lo, hi=hi, p=p)]).to_csv(
+        D / "cnx_e17a_contrast.csv", index=False)
 for a_, m_, b_, n_ in (("cnx_kd", "TGR", "cnx_kd", "source cutoff"), ("cnx_kd_tga", "source cutoff", "cnx_kd", "TGR"),
                        ("cnx_kd", "source cutoff", "cnx_control", "source cutoff")):
     e, l, h_, _ = stat(mean((a_, m_)) - mean((b_, n_)))

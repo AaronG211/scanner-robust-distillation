@@ -1,20 +1,31 @@
 \section{Pre-registration and analysis log}
 \label{app:prereg}
 
-Every confirmatory family was written into a protocol file before the models it concerns were trained or the numbers it
-concerns were computed; the SHA-256 hash of the file and the time were recorded at that moment (\tableref{tab:app-protocols}).
+Every confirmatory family was written into a protocol file before any of its contrasts was tested, i.e.\ before any
+interval or $p$-value it concerns was computed; the SHA-256 hash of the file and the time were recorded at that moment
+(\tableref{tab:app-protocols}). Each protocol states what already existed: for R, T, P, N1 and C some or all of the
+models had been trained, and for the ResNet-18 rows of R1 and for N1 the point estimates were known (marked $^\ast$ in
+\tableref{tab:app-tests}).
 Later edits are listed as amendments with their own hashes. \tableref{tab:app-tests} lists every pre-specified contrast
-with its expectation and outcome. Four expectations were not met (TGR against the source positive rate for ResNet-18 at
-the natural prevalence, TENT against KD + TGA, TGR against the source cutoff for ConvNeXt-T at $\pi=0.2$, and
-non-inferiority to the seed-2 training of H-optimus-0, F2), two were met only in part (TENT against AdaBN) and one
+with its expectation and outcome. Its $p$-values are Holm-adjusted within the family and two-sided, except that they
+are one-sided for the non-inferiority contrasts (N1a, N1b, N2d, N2e, F1, F2), unadjusted for the single contrasts E1.7a
+(amendment 1 of E1.7) and N2c, and unadjusted for the key secondary estimate of F, which is outside the Holm family
+and includes the already-known seed-0 term. An expectation counts as met if the difference is significant in the
+expected direction (for non-inferiority: if it is established), unless the expectation says otherwise. Five expectations were not met: four had the expected sign but were not significant (TGR
+against the source positive rate and against AdaBN for ResNet-18 at the natural prevalence, TENT against KD + TGA, and
+TGR against the source cutoff for ConvNeXt-T at $\pi=0.2$), and non-inferiority to the seed-2 training of H-optimus-0
+(F2) was not established; two were met only in part (TENT against AdaBN) and one
 result was better than expected (N2d).
 The ResNet-18 arms with the H-optimus-0 teacher (no-teacher student, KD, KD + TGA, no-teacher adaptation) were run first
 and analysed before these protocols; the expectations of the later families were derived from them.
 
-Analyses not covered by a protocol are descriptive and labelled as such: the attribution and the share of the teacher's
-advantage (\figureref{fig:gap}), the additional recalibration baselines (UPA, one bias to the source mean, EM with
-bias-corrected calibration, BBSE, bias + temperature and quantile mapping to the teacher), the labelled few-image cutoff,
-the prevalence estimates, teacher test-time augmentation and the throughput measurements. The additional baselines
+Analyses not covered by a protocol are descriptive. Besides those labelled in the text, they are: the attribution and
+the share of the teacher's advantage (\figureref{fig:gap}, including the recovery shares in RQ4), the additional
+recalibration baselines (UPA, one bias to the source mean, EM with bias-corrected calibration, BBSE, bias + temperature,
+quantile mapping to the teacher and the teacher positive rate), AdaBN + TENT + TGR, the comparison of the retrained
+ResNet-18 student with its teacher, the comparisons at labelled cutoffs, the labelled few-image cutoff, the prevalence
+estimates, the teacher LoRA seeds 1--2 (amendment 2 of E1.7), teacher test-time augmentation and the throughput
+measurements. The additional baselines
 were added after a literature review, once all pre-specified results of Protocols R and P had been computed; they do
 not change any pre-specified result.
 
@@ -29,7 +40,7 @@ of every contrast and what was already known when it was written.}}
 \toprule
 Protocol & Frozen & Content \\
 \midrule
-E1.7 (multi-teacher) & 2026-11-25 08:42 & Virchow2, UNI, UNI2-h teachers and ResNet-18 students; 9 contrasts. Amendment 1 (10:44): ConvNeXt-T students with H-optimus-0; amendment 2 (12:04): teacher LoRA seeds 1--2 (descriptive). \\
+E1.7 (multi-teacher) & 2026-11-25 08:42 & Virchow2, UNI, UNI2-h teachers and ResNet-18 students; 9 contrasts. Amendment 1 (10:44): ConvNeXt-T students with H-optimus-0 (1 contrast, E1.7a); amendment 2 (12:04): teacher LoRA seeds 1--2 (descriptive). \\
 R (recalibration) & 2026-11-25 08:55 & TGR against label-free baselines (9 contrasts) and against AdaBN with 1, 2, 5 images (3 contrasts). \\
 T (TENT) & 2026-11-25 10:40 & TENT against AdaBN and against retraining, KD and no-teacher students (4 contrasts). \\
 P (prevalence shift) & 2026-11-25 18:39 & Resampling design, TGR against the source positive rate and the source cutoff at $\pi=0.2, 0.6$ (8 contrasts). \\
@@ -79,6 +90,14 @@ held-out scanner, two models are trained (fit half A, fit half B), and each scor
 $[-10, 10]$. AdaBN resets every BatchNorm layer's running statistics and re-estimates them as a cumulative average over
 the fit-half cells. TENT trains only the BatchNorm affine parameters with Adam on the mean binary entropy of the fit-half
 cells (batch 64, no augmentation), then re-estimates the statistics.
+
+\paragraph{AdaBN + TGR departs from strict cross-fitting.} For this arm (\tableref{tab:main}, \figureref{fig:gap},
+\tableref{tab:app-orders}), the offset applied to one half was fitted on the other half's cells as scored by the model
+whose statistics were re-estimated on the scored half, not by the model that scores it. The scored half's unlabelled
+images therefore enter its own offset through the BatchNorm statistics. Strictly cross-fitted predictions exist only
+for H-optimus-0 (from the TENT runs); there the strict version gives 0.779 instead of 0.777 (S360: 0.762 instead of
+0.755; CS2 and XR within 0.001), so the departure does not inflate this arm. For the other teachers the adapted
+models' predictions on their own fit half were not saved.
 
 \paragraph{Baselines for the operating point.} Source positive rate: the cutoff on the fit half that reproduces the
 student's positive rate on source validation. UPA \citep{roschewitz2023automatic}: piecewise-linear quantile mapping
@@ -145,7 +164,8 @@ student exceeds this particular teacher ($+0.016$, $+0.004$ to $+0.029$).
 \FloatBarrier
 \section{Protocols F and C}
 \label{app:fc}
-Both protocols were frozen together (\tableref{tab:app-protocols}) before any of the models they concern was trained.
+Both protocols were frozen together (\tableref{tab:app-protocols}) before any of the new models they concern was
+trained; the ConvNeXt-T KD + TGA students of C1 and C2 and the seed-0 term of F's key secondary estimate already existed.
 
 \paragraph{Protocol C: no-teacher control for ConvNeXt-T.} The no-teacher adaptation recipe of the ResNet-18 control
 was applied unchanged to ConvNeXt-T (60 students: three held-out scanners, two fit halves, ten seeds): expert labels on
@@ -157,11 +177,11 @@ text in advance by the share of TGA's gain over the no-teacher student that the 
 was at least 0.5 for both teachers, the text would say that for both students most of the retraining gain comes from
 the unlabelled images. It is 0.57 (0.34 to 0.76) for both teachers, so this wording is used; its interval includes values
 below 0.5. The adapted no-teacher ConvNeXt-T reaches 0.759 (CS2), 0.777 (S360) and 0.789 (XR), and stays below the KD
-student with TGR ($-0.025$, $-0.040$ to $-0.013$, with H-optimus-0; $-0.014$, $-0.031$ to $-0.000$, with Virchow2;
+student with TGR ($-0.025$, $-0.040$ to $-0.013$, with H-optimus-0; $-0.014$, $-0.031$ to $-0.0002$, with Virchow2;
 descriptive).
 
 \paragraph{Protocol F: teacher LoRA seed.} The ConvNeXt-T students of H-optimus-0 were distilled again, with the recipe
-unchanged, from LoRA seeds 1 and 2 of the teacher (180 students: KD, and KD + TGA on both fit halves, for ten seeds and
+unchanged, from LoRA seeds 1 and 2 of the teacher (180 students: for each teacher seed, KD, and KD + TGA on both fit halves, for ten seeds and
 three held-out scanners). The teacher caches were rebuilt exactly as for seed 0, so the stain jitter of the cached views
 also differs between teacher seeds, as in a complete re-run of the pipeline. Each student is compared with the
 teacher training it was distilled from (one view, the teacher's own source cutoff). The teachers reach 0.814, 0.821 and
@@ -181,7 +201,8 @@ trainings, the retrained student's F1 varies by 0.013 (0.006 to 0.021), the teac
 \label{app:compute}
 
 The study trained 936 networks (36 LoRA teachers and 900 students) in about 22 GPU hours of training-loop time on
-one RTX 3090 Ti (\tableref{tab:app-compute}); 150 further exploratory networks are not reported. MIDOG++ is publicly
+one RTX 3090 Ti, except the three seed-0 H-optimus-0 teachers, which a co-author trained separately
+(\tableref{tab:app-compute}); 150 further exploratory networks are not reported. MIDOG++ is publicly
 available \citep{aubreville2023comprehensive}. Code, per-cell results and the pre-registration protocols are available at \url{https://github.com/AaronG211/scanner-robust-distillation}.
 
 \input{tables/app_compute}

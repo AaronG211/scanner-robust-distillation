@@ -1,8 +1,9 @@
 \begin{table}[htbp]
 \floatconts{tab:app-tests}
-{\caption{Every pre-specified contrast, in the order the protocols were written. R18 / CNX: ResNet-18 / ConvNeXt-T student. Differences are new-scanner F1 with 95\% paired-bootstrap intervals; $p$ is Holm-adjusted within the family (one-sided for non-inferiority, N1a--N2e and F; unadjusted for the key secondary estimate of F, which is outside the Holm family and includes the already-known seed-0 term). NI: non-inferiority at the margin 0.02.}}
+{\caption{Every pre-specified contrast, in the order the protocols were written. R18 / CNX: ResNet-18 / ConvNeXt-T student. Differences are new-scanner F1 with 95\% paired-bootstrap intervals; $p$ and ``met'' as defined in Appendix~\ref{app:prereg}. $^\ast$Point estimate known when the protocol was written. NI: non-inferiority at the margin 0.02.}}
 {%
 \tiny
+\renewcommand{\arraystretch}{0.92}
 \setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{@{}l>{\raggedright\arraybackslash}p{5.0cm}ccp{1.8cm}>{\raggedright\arraybackslash}p{2.4cm}@{}}
 \toprule
@@ -17,11 +18,12 @@ E1.7 & R18, UNI: KD+TGA $-$ no-teacher adaptation & +0.013 [+0.001, +0.027] & 0.
 E1.7 & R18, UNI2-h: KD $-$ no-teacher & -0.007 [-0.031, +0.015] & 1.000 & small, n.s. & met \\
 E1.7 & R18, UNI2-h: KD+TGA $-$ KD & +0.067 [+0.044, +0.094] & $<$0.001 & $>0$, significant & met \\
 E1.7 & R18, UNI2-h: KD+TGA $-$ no-teacher adaptation & +0.002 [-0.014, +0.019] & 1.000 & 0 to +0.03 & met \\
-R1 & R18 KD: TGR $-$ source cutoff & +0.037 [+0.022, +0.053] & $<$0.001 & $>0$ & met \\
-R1 & R18 KD: TGR $-$ source positive rate & +0.002 [-0.008, +0.012] & 0.675 & $>0$ & not met \\
+E1.7a & CNX, H-optimus-0: KD+TGA $-$ KD & +0.040 [+0.026, +0.056] & $<$0.001 & $>0$, significant & met \\
+R1 & R18 KD: TGR $-$ source cutoff$^\ast$ & +0.037 [+0.022, +0.053] & $<$0.001 & $>0$ & met \\
+R1 & R18 KD: TGR $-$ source positive rate & +0.002 [-0.008, +0.012] & 0.675 & $>0$ & not met (positive, n.s.) \\
 R1 & R18 KD: TGR $-$ EM prior & +0.210 [+0.176, +0.240] & $<$0.001 & $>0$ & met \\
 R1 & R18 KD: TGR $-$ teacher pseudo-label cutoff & +0.004 [-0.001, +0.011] & 0.400 & none & -- \\
-R1 & R18 KD: TGR $-$ AdaBN & -0.010 [-0.024, +0.004] & 0.400 & $<0$ & direction met (n.s.) \\
+R1 & R18 KD: TGR $-$ AdaBN$^\ast$ & -0.010 [-0.024, +0.004] & 0.400 & $<0$ & not met (negative, n.s.) \\
 R1 & CNX KD: TGR $-$ source cutoff & +0.036 [+0.022, +0.052] & $<$0.001 & $>0$ & met \\
 R1 & CNX KD: TGR $-$ source positive rate & +0.019 [+0.009, +0.031] & $<$0.001 & $>0$ & met \\
 R1 & CNX KD: TGR $-$ EM prior & +0.129 [+0.098, +0.161] & $<$0.001 & $>0$ & met \\
@@ -41,14 +43,14 @@ P & CNX KD, $\pi=0.2$: TGR $-$ source positive rate & +0.078 [+0.064, +0.094] & 
 P & CNX KD, $\pi=0.6$: TGR $-$ source positive rate & +0.083 [+0.067, +0.103] & $<$0.001 & $>0$, significant & met \\
 P & CNX KD, $\pi=0.2$: TGR $-$ source cutoff & +0.014 [-0.002, +0.031] & 0.080 & $>0$, significant & not met \\
 P & CNX KD, $\pi=0.6$: TGR $-$ source cutoff & +0.051 [+0.038, +0.067] & $<$0.001 & $>0$, significant & met \\
-N1a & CNX vs H-optimus-0 teacher: KD+TGA $-$ teacher & -0.009 [-0.022, +0.003] & 0.085 & borderline & NI not established \\
-N1b & CNX vs H-optimus-0 teacher: KD+TGR $-$ teacher & -0.013 [-0.026, -0.001] & 0.151 & not non-inferior & NI not established (met) \\
+N1a & CNX vs H-optimus-0 teacher: KD+TGA $-$ teacher$^\ast$ & -0.009 [-0.022, +0.003] & 0.085 & borderline & NI not established \\
+N1b & CNX vs H-optimus-0 teacher: KD+TGR $-$ teacher$^\ast$ & -0.013 [-0.026, -0.001] & 0.151 & not non-inferior & NI not established (met) \\
 N2c & CNX, Virchow2: KD+TGA $-$ KD (superiority) & +0.044 [+0.031, +0.059] & $<$0.001 & $>0$, significant & met \\
-N2d & CNX vs Virchow2 teacher: KD+TGA $-$ teacher & -0.001 [-0.014, +0.012] & 0.004 & as N1a (not NI) & non-inferior (better than expected) \\
+N2d & CNX vs Virchow2 teacher: KD+TGA $-$ teacher & -0.001 [-0.014, +0.012] & 0.004 & same as N1a (borderline) & non-inferior (better than expected) \\
 N2e & CNX vs Virchow2 teacher: KD+TGR $-$ teacher & -0.016 [-0.031, -0.002] & 0.283 & not non-inferior & NI not established (met) \\
 F1 & CNX vs H-optimus-0 LoRA seed 1: KD+TGA $-$ teacher & -0.012 [-0.024, +0.001] & 0.090 & NI not established & NI not established (met) \\
 F2 & CNX vs H-optimus-0 LoRA seed 2: KD+TGA $-$ teacher & -0.005 [-0.018, +0.008] & 0.027 & non-inferior & NI not established (not met) \\
-F key & CNX vs H-optimus-0, mean over LoRA seeds 0--2: KD+TGA $-$ teacher & -0.009 [-0.020, +0.002] & 0.023 & borderline & non-inferior; partly seen data \\
+F key & CNX vs H-optimus-0, mean over LoRA seeds 0--2: KD+TGA $-$ teacher & -0.009 [-0.0198, +0.002] & 0.023 & borderline & non-inferior; partly seen data \\
 C1 & CNX, H-optimus-0: KD+TGA $-$ no-teacher adaptation & +0.030 [+0.016, +0.045] & $<$0.001 & 0 to +0.04 & met \\
 C2 & CNX, Virchow2: KD+TGA $-$ no-teacher adaptation & +0.030 [+0.017, +0.046] & $<$0.001 & 0 to +0.04 & met \\
 \bottomrule

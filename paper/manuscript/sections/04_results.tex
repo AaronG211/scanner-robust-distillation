@@ -6,7 +6,7 @@
 \subsection{RQ1: distillation transfers ranking, not robustness}
 
 The LoRA teachers reach a new-scanner F1 of 0.767 to 0.814 (\tableref{tab:main}; means over three LoRA seeds 0.778 to
-0.812, in line with \citealp{ammeling2026benchmarking}); the no-teacher ResNet-18 student reaches 0.711. Yet distilling any of the four teachers into ResNet-18 changes its F1 by only $-0.007$ to $+0.013$,
+0.812, comparable to unseen tumour types in \citealp{ammeling2026benchmarking}); the no-teacher ResNet-18 student reaches 0.711. Yet distilling any of the four teachers into ResNet-18 changes its F1 by only $-0.007$ to $+0.013$,
 and every 95\% interval includes zero. ConvNeXt-T benefits more (+0.029, +0.014 to +0.045, with H-optimus-0; +0.025
 with Virchow2) but recovers only 37\% and 36\% of the teacher's advantage (48\% and 63\% with two other
 trainings of H-optimus-0). The shortfall is not a failure to rank cells: the AUROC of the distilled ResNet-18
@@ -29,7 +29,7 @@ For the ResNet-18 student, the two post-hoc layers recover most of the teacher's
 (\figureref{fig:gap}): the operating point accounts for 17\% to 27\% and the BatchNorm statistics for 30\% to 48\%,
 together 51\% to 75\% for the three teachers with a reliable operating point. Once both are repaired, retraining adds
 only 4\% to 11\%, and 25\% to 30\% remains. ConvNeXt-T, by contrast, has no statistics to re-estimate; there the
-operating point alone accounts for 46\% (H-optimus-0) and 41\% (Virchow2), and retraining adds 5\% and 22\%. Retraining is not AdaBN in disguise: putting source
+operating point alone accounts for 46\% (H-optimus-0) and 41\% (Virchow2), and retraining adds 5\% and 22\%. Retraining is not disguised AdaBN: putting source
 statistics back into the retrained ResNet-18 student costs only 0.011 (S360) and 0.007 F1 (XR)
 (Appendix~\ref{app:ladder}).
 
@@ -56,7 +56,7 @@ What the teacher contributes here is the target prevalence. At the natural preva
 scanners, keeping the source positive rate (what UPA reduces to at one operating point) is only 0.002 below TGR for ResNet-18 ($-0.008$ to $+0.012$, contrary to our expectation) and 0.019
 below for ConvNeXt-T (+0.009 to +0.031, Holm $p<0.001$). Once the prevalence changes, however, source-referenced
 methods break while TGR stays near the labelled bound (\figureref{fig:threshold}c,d): at 0.2 or 0.6 it beats the source positive rate by 0.061 to 0.083 (four pre-specified contrasts, Holm $p<0.001$) and the same
-offset referenced to the source mean probability by 0.025 to 0.126. Three other teacher-referenced recalibrations stay
+offset referenced to the source mean probability by 0.025 to 0.126. Three of the four other teacher-referenced recalibrations stay
 within 0.015 of TGR (Appendix~\ref{app:baselines}), so the reference matters more than the functional form. Prior-shift
 estimators, conversely, fail even at the natural prevalence (EM, EM with bias-corrected calibration, BBSE: 0.52 to 0.55
 for ResNet-18): on S360 the student calls 21\% of cells positive (true prevalence 35\%) and they conclude 4\% to 9\%,
@@ -65,7 +65,7 @@ reading the scanner-induced score shift as a prevalence change.
 \subsection{RQ3b: retraining gains come mostly from the unlabelled images}
 
 Retraining with the teacher on the unlabelled half (TGA) is the largest step: +0.060 to +0.067 over the KD
-ResNet-18 student for every teacher (Holm $p<0.001$), and +0.040 (H-optimus-0) and +0.044 (Virchow2, Holm $p<0.001$)
+ResNet-18 student for every teacher (Holm $p<0.001$ for the three pre-specified ones), and +0.040 (H-optimus-0) and +0.044 (Virchow2; both $p<0.001$)
 for ConvNeXt-T. Most of this gain, however, does not need the teacher. For ResNet-18, the target images alone reach 75\% to 96\% of TGA's gain over the no-teacher student (0.769),
 and the teacher adds +0.002 to +0.019 (not significant after Holm correction for the three pre-specified teachers;
 +0.019, +0.006 to +0.034, for H-optimus-0, analysed before the protocols were written). AdaBN, TENT and TGR together
@@ -91,11 +91,11 @@ margin ($-0.001$, $-0.014$ to $+0.012$; Holm $p=0.004$). Against H-optimus-0 it 
 so non-inferiority is not established ($p=0.085$; \figureref{fig:close}), nor for students of two other LoRA
 trainings of this teacher (pre-specified, Appendix~\ref{app:fc}): they recover 86\% and 92\% of their own teacher's
 advantage and stay 0.012 ($-0.024$ to $+0.001$) and 0.005 ($-0.018$ to $+0.008$) below it (Holm $p=0.090$ and
-$0.027$; we expected non-inferiority for seed 2). On average over the three trainings the gap is 0.009 (lower limit
-$-0.0198$), half the spread of the teacher's own F1 across them (0.020). With TGR alone, the KD
+$0.027$; we expected non-inferiority for seed 2). On average over the three trainings (pre-specified) the gap is 0.009 (lower limit
+$-0.0198$, just inside the margin), half the spread of the teacher's own F1 across them (0.020). With TGR alone, the KD
 students stay below both seed-0 teachers ($-0.013$, $-0.016$), and the retrained ResNet-18 student remains 0.026
-($-0.038$ to $-0.014$) below H-optimus-0. Neither the operating point nor test-time augmentation explains the comparison: with labelled cutoffs on both sides
+($-0.038$ to $-0.014$) below H-optimus-0. Neither the operating point nor test-time augmentation explains this: with labelled cutoffs on both sides
 the differences are $-0.003$ (H-optimus-0) and $-0.004$ (Virchow2), and eight-view augmentation does not help the
 teachers (0.814 to 0.812; 0.805 to 0.797). With 23 to 41 times fewer parameters, the
 ConvNeXt-T student classifies 7{,}899 cells per second, 62 and 98 times as many as Virchow2 and H-optimus-0 (8 to 12
-times if only the student uses eight-view augmentation), and the teacher is needed only once per new scanner.
+times if only the student uses eight-view augmentation), and the teacher is needed once per new scanner.

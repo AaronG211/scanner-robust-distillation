@@ -6,9 +6,9 @@
 of its scores on a new scanner. The operating point fails first and, for a BatchNorm network, the
 normalisation statistics second; both are restored from unlabelled images without retraining. Only the
 representation gap needs retraining, and for ResNet-18 about a quarter of the teacher's advantage remains that none of
-our steps closes. The teacher is indispensable mainly at the operating point, where its predictions carry the target
+our steps closes. The teacher is needed mainly at the operating point, where its predictions carry the target
 prevalence that no source-referenced method can know; in retraining, its soft labels help ConvNeXt-T more than
-ResNet-18 (+0.030 against +0.002 to +0.019 F1).
+ResNet-18 (+0.030 vs.\ +0.002 to +0.019 F1).
 
 \paragraph{Practical guidance.} With one or two unlabelled images, recalibrate against the teacher
 (TGR); with one image this beats re-estimating BatchNorm statistics, and at every budget it matches or beats a cutoff
@@ -17,10 +17,10 @@ recalibrate; a BatchNorm-free student should be recalibrated first. If compute a
 If the target prevalence may differ from the source, avoid source-referenced recalibration, and do not trust
 prior-shift estimates under acquisition shift.
 
-\paragraph{Relation to previous work.} At a deployed operating point, a distilled task model is not as robust as its
-teacher, as in natural images \citep{addepalli2024leveraging}. Teacher-referenced recalibration removes UPA's assumption of preserved prevalence
-\citep{roschewitz2023automatic}, and prior-shift estimators fail under acquisition shift, as predicted by
-\citet{garg2020unified}.
+\paragraph{Relation to previous work.} At a deployed operating point, a distilled model is less robust than its
+teacher, as in natural images \citep{addepalli2024leveraging}. Teacher-referenced recalibration drops UPA's assumption of preserved prevalence
+\citep{roschewitz2023automatic}, and prior-shift estimators fail as acquisition shift breaks their assumptions
+\citep{garg2020unified}.
 
 \paragraph{Limitations.} All results come from one dataset, one organ and three scanners; their consistency over four
 teachers, two students and three held-out scanners supports them within this setting, not beyond it. The prevalence

@@ -28,24 +28,27 @@ s3 = lambda x: (f"{x:+.3f}")
 def ci(v, lo, hi): return f"{v:+.3f} [{lo:+.3f}, {hi:+.3f}]"
 def pfmt(p):
     return "$<$0.001" if p < 0.001 else f"{p:.3f}"
-def table(label, caption, colspec, header, rows, size=r"\scriptsize", sep="3pt", extra_top=""):
+def table(label, caption, colspec, header, rows, size=r"\scriptsize", sep="3pt", extra_top="", stretch=None):
     body = "\n".join(rows)
-    return (f"\\begin{{table}}[htbp]\n\\floatconts{{{label}}}\n{{\\caption{{{caption}}}}}\n{{%\n{size}\n\\setlength{{\\tabcolsep}}{{{sep}}}\n"
+    st = f"\\renewcommand{{\\arraystretch}}{{{stretch}}}\n" if stretch else ""
+    return (f"\\begin{{table}}[htbp]\n\\floatconts{{{label}}}\n{{\\caption{{{caption}}}}}\n{{%\n{size}\n{st}\\setlength{{\\tabcolsep}}{{{sep}}}\n"
             f"\\begin{{tabular}}{{{colspec}}}\n\\toprule\n{extra_top}{header} \\\\\n\\midrule\n{body}\n\\bottomrule\n\\end{{tabular}}\n}}\n\\end{{table}}\n")
 def write(name, s):
     (OUT / f"{name}.tex").write_text(s); print("wrote", name)
 
 # ------------------------------------------------------------------ app_tests
 rows = []
-def add(fam, contrast, diff, lo, hi, holm, expect, outcome):
-    rows.append(f"{fam} & {contrast} & {ci(diff, lo, hi)} & {pfmt(holm)} & {expect} & {outcome} \\\\")
+def add(fam, contrast, diff, lo, hi, holm, expect, outcome, interval=None):
+    rows.append(f"{fam} & {contrast} & {interval or ci(diff, lo, hi)} & {pfmt(holm)} & {expect} & {outcome} \\\\")
+KNOWN = "$^\\ast$"                                    # point estimate known when the protocol was written
 def judge(kind, d, lo, hi, holm):
     if kind == "pos_sig":   return "met" if lo > 0 and holm < 0.05 else "not met"
     if kind == "neg_sig":   return "met" if hi < 0 and holm < 0.05 else ("not met (negative, n.s.)" if d < 0 else "not met")
     if kind == "ns_small":  return "met" if holm >= 0.05 and abs(d) <= 0.02 else "not met"
     if kind == "range":     return "met" if 0 <= d <= 0.03 else "not met"
     if kind == "small_ns":  return "met" if abs(d) <= 0.01 and holm >= 0.05 else ("partly (within $\\pm$0.01, but significant)" if abs(d) <= 0.01 else "not met")
-    if kind == "dir_neg":   return "direction met (n.s.)" if d < 0 and holm >= 0.05 else ("met" if d < 0 else "not met")
+    if kind == "dir_pos":   return "met" if lo > 0 and holm < 0.05 else ("not met (positive, n.s.)" if d > 0 else "not met")
+    if kind == "dir_neg":   return "met" if hi < 0 and holm < 0.05 else ("not met (negative, n.s.)" if d < 0 else "not met")
     if kind == "geq":       return "met" if d >= 0 else "not met"
     return "--"
 E = pd.read_csv(D / "r18_e17_boot.csv")
@@ -56,15 +59,19 @@ for _, r in E.iterrows():
     lab = {"KD vs no teacher": "KD $-$ no-teacher", "KD+TGA vs KD": "KD+TGA $-$ KD",
            "KD+TGA vs Optimus-free adaptation": "KD+TGA $-$ no-teacher adaptation"}[what]
     add("E1.7", f"R18, {NAME[fm]}: {lab}", r["diff"], r.lo, r.hi, r.holm, exp, judge(kind, r["diff"], r.lo, r.hi, r.holm))
+A1 = pd.read_csv(D / "cnx_e17a_contrast.csv").iloc[0]      # E1.7 amendment 1: single two-sided contrast (scripts/cnx_boot.py)
+add("E1.7a", "CNX, H-optimus-0: KD+TGA $-$ KD", A1["diff"], A1.lo, A1.hi, A1.p, "$>0$, significant", judge("pos_sig", A1["diff"], A1.lo, A1.hi, A1.p))
 R = pd.read_csv(D / "recal_compare.csv")
-EXP_R = {"TGR vs none": ("pos_sig", "$>0$"), "TGR vs source_rate": ("pos_sig", "$>0$"), "TGR vs em_prior": ("pos_sig", "$>0$"),
+EXP_R = {"TGR vs none": ("dir_pos", "$>0$"), "TGR vs source_rate": ("dir_pos", "$>0$"), "TGR vs em_prior": ("dir_pos", "$>0$"),
          "TGR vs teacher_pl": (None, "none"), "TGR vs adabn": ("dir_neg", "$<0$")}
 LAB_R = {"none": "source cutoff", "source_rate": "source positive rate", "em_prior": "EM prior", "teacher_pl": "teacher pseudo-label cutoff", "adabn": "AdaBN"}
 for _, r in R.iterrows():
     st = "R18" if r.student.startswith("r18") else "CNX"
     if r.family == 1:
         kind, exp = EXP_R[r.contrast]
-        add("R1", f"{st} KD: TGR $-$ {LAB_R[r.contrast.split(' vs ')[1]]}", r["diff"], r.lo, r.hi, r.holm, exp, judge(kind, r["diff"], r.lo, r.hi, r.holm))
+        other = r.contrast.split(' vs ')[1]
+        known = KNOWN if st == "R18" and other in ("none", "adabn") else ""   # RECAL_PROTOCOL.md: 0.725 / 0.762 / 0.772 known
+        add("R1", f"{st} KD: TGR $-$ {LAB_R[other]}{known}", r["diff"], r.lo, r.hi, r.holm, exp, judge(kind, r["diff"], r.lo, r.hi, r.holm))
     else:
         n = int(r.contrast.split(", ")[1].split()[0])
         add("R2", f"R18 KD, {n} image{'s' if n > 1 else ''}: TGR $-$ AdaBN", r["diff"], r.lo, r.hi, r.holm,
@@ -91,11 +98,12 @@ for fn, fam in (("noninferiority_hopt0.csv", "N1"), ("noninferiority_virchow2.cs
             add("N2c", "CNX, Virchow2: KD+TGA $-$ KD (superiority)", r["diff"], r.lo, r.hi, r.holm, "$>0$, significant", judge("pos_sig", r["diff"], r.lo, r.hi, r.holm))
             continue
         arm = "KD+TGA" if "tga" in r.contrast else "KD+TGR"
-        expect = {"N1a": "borderline", "N1b": "not non-inferior", "N2d": "as N1a (not NI)", "N2e": "not non-inferior"}[r.test]
+        expect = {"N1a": "borderline", "N1b": "not non-inferior", "N2d": "same as N1a (borderline)", "N2e": "not non-inferior"}[r.test]
         ni = bool(r.non_inferior)
         outcome = ("non-inferior" if ni else "NI not established")
         outcome += {"N1a": "", "N1b": " (met)", "N2d": " (better than expected)", "N2e": " (met)"}[r.test] if r.test != "N1a" else ""
-        add(r.test, f"CNX vs {tea} teacher: {arm} $-$ teacher", r["diff"], r.lo, r.hi, r.holm, expect, outcome)
+        known = KNOWN if fam == "N1" else ""          # NONINFERIORITY_PROTOCOL.md lists the N1 point estimates
+        add(r.test, f"CNX vs {tea} teacher: {arm} $-$ teacher{known}", r["diff"], r.lo, r.hi, r.holm, expect, outcome)
 fc = D / "teacher_seed_robustness.csv"
 if fc.exists():
     F = pd.read_csv(fc); F = F[F.kind == "pre-specified"]
@@ -107,7 +115,8 @@ if fc.exists():
                 "non-inferior" if exp_ni else "NI not established", verdict + (" (met)" if ni == exp_ni else " (not met)"))
         else:                                         # key secondary: not in the Holm family; unadjusted one-sided p
             add("F key", "CNX vs H-optimus-0, mean over LoRA seeds 0--2: KD+TGA $-$ teacher", r["diff"], r.lo, r.hi,
-                r.p_one_sided, "borderline", verdict + "; partly seen data")
+                r.p_one_sided, "borderline", verdict + "; partly seen data",
+                interval=f"{r['diff']:+.3f} [{r.lo:+.4f}, {r.hi:+.3f}]")   # lower limit to 4 decimals: it sits at the margin
 cc = D / "cnx_free_control.csv"
 if cc.exists():
     C = pd.read_csv(cc); C = C[C.kind == "pre-specified"]
@@ -116,10 +125,9 @@ if cc.exists():
         add(r.test, f"CNX, {tea}: KD+TGA $-$ no-teacher adaptation", r["diff"], r.lo, r.hi, r.holm, "0 to +0.04", "met" if 0 <= r["diff"] <= 0.04 else "not met")
 write("app_tests", table("tab:app-tests",
     "Every pre-specified contrast, in the order the protocols were written. R18 / CNX: ResNet-18 / ConvNeXt-T student. "
-    "Differences are new-scanner F1 with 95\\% paired-bootstrap intervals; $p$ is Holm-adjusted within the family "
-    "(one-sided for non-inferiority, N1a--N2e and F; unadjusted for the key secondary estimate of F, which is outside the "
-    "Holm family and includes the already-known seed-0 term). NI: non-inferiority at the margin 0.02.",
-    "@{}l>{\\raggedright\\arraybackslash}p{5.0cm}ccp{1.8cm}>{\\raggedright\\arraybackslash}p{2.4cm}@{}", "Family & Contrast & Difference [95\\% CI] & Holm $p$ & Expected & Outcome", rows, size=r"\tiny", sep="2.5pt"))
+    "Differences are new-scanner F1 with 95\\% paired-bootstrap intervals; $p$ and ``met'' as defined in "
+    "Appendix~\\ref{app:prereg}. $^\\ast$Point estimate known when the protocol was written. NI: non-inferiority at the margin 0.02.",
+    "@{}l>{\\raggedright\\arraybackslash}p{5.0cm}ccp{1.8cm}>{\\raggedright\\arraybackslash}p{2.4cm}@{}", "Family & Contrast & Difference [95\\% CI] & Holm $p$ & Expected & Outcome", rows, size=r"\tiny", sep="2.5pt", stretch="0.92"))
 
 # ------------------------------------------------------------------ app_perscanner
 L = pd.read_csv(D / "ladder_recovered.csv")

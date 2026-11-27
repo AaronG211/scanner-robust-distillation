@@ -13,16 +13,16 @@ validation set by F1, so the held-out scanner never informs a training decision.
 All 50 images of the held-out scanner are used for evaluation through cross-fitting. They are sorted by
 identifier and split into alternating halves $A$ and $B$. Every method that uses unlabelled new-scanner data is fitted
 on one half and applied to the other, then the halves are swapped, so each cell is scored by a model that never saw its
-image in any form. The outcome is F1 on all cells of the held-out scanner, computed per run, averaged over the student
-seeds and then over the three held-out scanners. New-scanner labels are used only for scoring and for the
-labelled-cutoff upper bound.
+image in any form (except AdaBN + TGR; Appendix~\ref{app:impl}). The outcome is F1 on all cells of the held-out scanner, computed per run, averaged over the student
+seeds and then over the three held-out scanners. New-scanner labels are used only for scoring and the
+labelled-cutoff bound.
 
 \subsection{Teachers and students}
 
 \emph{Teachers.} Four pathology foundation models, H-optimus-0 \citep{hoptimus0}, Virchow2 \citep{zimmermann2024virchow2},
-UNI \citep{chen2024uni} and UNI2-h \citep{uni2h}, are adapted with LoRA \citep{hu2022lora} (rank 16, $\alpha=16$,
-dropout 0.1 on every attention and MLP projection; frozen encoder; linear head on the class token concatenated with the
-mean patch token), following a recent mitotic-figure benchmark \citep{ammeling2026benchmarking}. Each teacher is
+UNI \citep{chen2024uni} and UNI2-h \citep{uni2h}, are adapted with LoRA \citep{hu2022lora} as in a recent
+mitotic-figure benchmark \citep{ammeling2026benchmarking} (rank 16, $\alpha=16$, dropout 0.1 on every attention and MLP
+projection; frozen encoder), with a linear head on the class token concatenated with the mean patch token. Each teacher is
 trained for 5 epochs on 224-pixel centre crops, once per held-out scanner and LoRA seed (three seeds).
 
 \emph{Students.} To test whether the decomposition depends on BatchNorm, we use two ImageNet-initialised students:
@@ -83,10 +83,10 @@ fold-averaged statistic. Two-sided bootstrap $p$-values are adjusted with Holm's
 each family of contrasts.
 
 Each family of confirmatory contrasts, together with its expected direction, was written down and its file hash
-recorded before the corresponding models were trained or the corresponding numbers computed (Appendix~\ref{app:prereg});
+recorded before any of its contrasts was tested; each protocol states what already existed (Appendix~\ref{app:prereg});
 results that contradict an expectation are reported as such, and analyses added afterwards are labelled descriptive. To
 ask whether the student is as good as its teacher, we test non-inferiority with a margin of $\delta=0.02$ F1, the range
 of the H-optimus-0 teacher's own new-scanner F1 over three LoRA seeds (0.801 to 0.821): the student is called
-non-inferior if the lower limit of the 95\% interval of (student $-$ teacher) exceeds $-0.02$ (one-sided $\alpha=0.025$,
-Holm within the family). A failed test is reported as ``non-inferiority not established'', not as equivalence or
+non-inferior if (student $-$ teacher) exceeds $-0.02$ at one-sided $\alpha=0.025$ after Holm correction within the
+family. A failed test is reported as ``non-inferiority not established'', not as equivalence or
 difference.

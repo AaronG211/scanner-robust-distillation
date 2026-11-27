@@ -25,8 +25,8 @@ cost (\figureref{fig:schematic}). We ask:
 \textbf{RQ3} What does each layer need to be repaired, and what is the teacher needed for?
 \textbf{RQ4} How close does the repaired student get to its teacher, and at what cost?
 To separate the teacher's contribution from that of the unlabelled target images, we include controls without any
-foundation model; to guard against selective reporting, every confirmatory contrast was specified before the
-corresponding models were trained.
+foundation model; to guard against selective reporting, every confirmatory contrast was written down, with its
+expected direction, before it was tested.
 
 \begin{figure}[t]
 \floatconts
@@ -50,6 +50,6 @@ for ResNet-18, 57\% for ConvNeXt-T), though for ConvNeXt-T the teacher still add
 \textbf{(4) A repaired small student comes close to its teacher.} A ConvNeXt-T student with 23 to 41 times
 fewer parameters and 62 to 98 times the throughput recovers 86\% to 99\% of its teacher's advantage and is non-inferior
 to Virchow2 at a margin of 0.02 F1; against three LoRA trainings of H-optimus-0 it trails by 0.005 to 0.012 F1, and
-non-inferiority is not established. This is an analysis study: TGR is an intercept-only recalibration whose new element is its reference. The contribution
+non-inferiority to any one of them is not established. This is an analysis study: TGR is an intercept-only recalibration whose new element is its reference. The contribution
 is the measured decomposition, the controls that attribute each repair to the teacher or to the target data, and the
-cost-ordered guidance they give for deploying distilled models on new scanners.
+cost-ordered guidance they give for deployment on new scanners.

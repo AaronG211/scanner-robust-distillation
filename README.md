@@ -2,7 +2,7 @@
 
 **A case study of pathology foundation models for mitotic figure classification**
 
-Aaron Gao, SeongJun Kwon, Axel Ramirez · Washington University in St. Louis
+Shenghan Gao, SeongJun Kwon, Axel Ramirez · Washington University in St. Louis
 
 [Paper (PDF)](paper/manuscript/main.pdf) · [Figures](figures/paper/) · [Pre-registration protocols](protocols/) ·
 [Team code](https://github.com/ksj1999/General_Mitosis_Detection)
@@ -143,7 +143,7 @@ for pixel. To check that one of the six protocols behind the paper is unchanged 
 @misc{gao2026recovering,
   title  = {Recovering Scanner Robustness Lost in Distillation: A Case Study of Pathology Foundation Models
             for Mitotic Figure Classification},
-  author = {Gao, Aaron and Kwon, SeongJun and Ramirez, Axel},
+  author = {Gao, Shenghan and Kwon, SeongJun and Ramirez, Axel},
   year   = {2026},
   note   = {Preprint}
 }

@@ -149,12 +149,6 @@ for pixel. To check that one of the six protocols behind the paper is unchanged 
 }
 ```
 
-## AI assistance
-
-The analysis scripts, the pre-registration protocols and the manuscript draft were developed with the help of LLM
-assistants (Claude Code; the text was also revised with Gemini). All numbers are produced by the scripts in this
-repository from the stored result files.
-
 ## License
 
 Code in this repository is released under the [MIT License](LICENSE). MIDOG++ and the foundation models keep their
